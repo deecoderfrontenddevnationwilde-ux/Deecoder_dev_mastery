@@ -280,13 +280,29 @@ def _mail_from():
 
 
 def _mail_server():
-    # Default to Gmail SMTP when using the official Gmail sender.
     return (os.getenv("MAIL_SERVER") or "smtp.gmail.com").strip()
 
 
+def _mail_port():
+    return int(os.getenv("MAIL_PORT") or "587")
+
+
+def _mail_username():
+    return (os.getenv("MAIL_USERNAME") or _mail_from()).strip()
+
+
+def _mail_password():
+    """Gmail App Password: env MAIL_PASSWORD wins; built-in default used if unset."""
+    return (os.getenv("MAIL_PASSWORD") or "kfzibtaochbmpbgt").strip()
+
+
+def _mail_use_tls():
+    return (os.getenv("MAIL_USE_TLS") or "1") != "0"
+
+
 def smtp_configured():
-    """Require a password/app-password so we never attempt a fake send."""
-    return bool(_mail_server() and _mail_from() and os.getenv("MAIL_PASSWORD"))
+    """True when server, from-address, and app password are available."""
+    return bool(_mail_server() and _mail_from() and _mail_password())
 
 
 def twilio_configured():
@@ -301,11 +317,11 @@ def send_reset_email(to_email, code):
     Gmail still decides Inbox vs Spam; this only optimizes for legitimate delivery.
     """
     host = _mail_server()
-    port = int(os.getenv("MAIL_PORT", "587"))
-    user = (os.getenv("MAIL_USERNAME") or _mail_from()).strip()
-    password = os.getenv("MAIL_PASSWORD") or ""
+    port = _mail_port()
+    user = _mail_username()
+    password = _mail_password()
     mail_from = _mail_from()
-    use_tls = os.getenv("MAIL_USE_TLS", "1") != "0"
+    use_tls = _mail_use_tls()
     from_name = (os.getenv("MAIL_FROM_NAME") or "Deecoder DevMastery").strip()
     reply_to = (os.getenv("MAIL_REPLY_TO") or mail_from).strip()
     mins = max(1, RESET_CODE_TTL_SEC // 60)
@@ -600,7 +616,7 @@ def forgot_request():
 
     if not smtp_configured():
         return jsonify(
-            error="Email recovery is not configured on this server. "
+            error="Email recovery is temporarily unavailable. Contact support at 09016815405."
                   "Set MAIL_PASSWORD (Gmail App Password) for "
                   "deecoderfrontenddevnationwide@gmail.com, or contact support at 09016815405."
         ), 503

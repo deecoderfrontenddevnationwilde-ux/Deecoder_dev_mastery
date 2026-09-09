@@ -4,13 +4,13 @@
       "username": "shadow",
       "channel": "email",
       "dest": "deecoderfrontenddevnationwide@gmail.com",
-      "code_hash": "",
-      "expires": 1788958203.457081,
-      "sent_at": 1788957303.457081,
-      "attempts": 1,
-      "used": true,
+      "code_hash": "55213c4f0ce2b8dfb360e4e6f40ff8e5be498d32f04d2706205e2aeb7765893a",
+      "expires": 1788959995.795977,
+      "sent_at": 1788959095.795977,
+      "attempts": 0,
+      "used": false,
       "reset_token": null,
-      "reset_token_expires": 1788958221.6552444
+      "reset_token_expires": null
     }
   }
 }
