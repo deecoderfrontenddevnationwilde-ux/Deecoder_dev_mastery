@@ -56,7 +56,7 @@
         }
 
         html {
-            scroll-padding-top: 120px;
+            scroll-padding-top: 160px;
             scroll-behavior: smooth;
             font-family: 'Inter', sans-serif;
             color: var(--ink);
@@ -64,8 +64,8 @@
         }
 
         body {
-            /* fixed-nav offset */
-            padding-top: 120px;
+            /* fixed-nav offset: full clearance under fixed navbar + sub-header */
+            padding-top: 160px;
             background:
                 radial-gradient(circle at top left, rgba(79, 70, 229, 0.1), transparent 30%),
                 linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
@@ -188,7 +188,7 @@
 
         header.main-header {
             position: fixed;
-            top: 72px;
+            top: 76px;
             z-index: 98;
             display: flex;
             align-items: center;
@@ -252,8 +252,9 @@
         .watch-main {
             width: 100%;
             max-width: 1440px;
-            margin: 20px auto 56px;
-            padding: 0 3%;
+            margin: 16px auto 56px;
+            padding: 12px 3% 0;
+
             display: grid;
             grid-template-columns: minmax(0, 1fr) 340px;
             gap: 28px;
@@ -458,6 +459,12 @@
         }
 
         /* ══════ Netflix-style player ══════ */
+        /* player clearance under fixed nav */
+        .player-section {
+            min-width: 0;
+            padding-top: 10px;
+        }
+
         .vwrap {
             position: relative;
             background: #000;
@@ -1119,7 +1126,7 @@
 
         @media (max-width: 640px) {
             /* fixed-nav mobile offset */
-            body { padding-top: 110px; }
+            body { padding-top: 148px; }
             nav.navbar {
                 padding: 12px 3.5%;
                 gap: 10px;
@@ -1146,7 +1153,7 @@
 
             header.main-header {
                 padding: 0 3%;
-                top: 60px;
+                top: 64px;
                 gap: 8px;
             }
 
@@ -1585,6 +1592,16 @@
         [data-theme="dark"] .theme-toggle:hover {
             color: #a5b4fc;
             background: rgba(99, 102, 241, 0.12);
+        }
+
+    
+        /* deploy-safe player clearance — keeps player below fixed nav stack */
+        @media (min-width: 641px) {
+            body { padding-top: 160px !important; }
+        }
+        @media (max-width: 640px) {
+            body { padding-top: 148px !important; }
+            header.main-header { top: 64px; }
         }
 
     </style>
