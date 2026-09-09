@@ -1,0 +1,100 @@
+{
+  "courseName": "Advanced React & Micro-Frontends",
+  "modules": [
+    {
+      "name": "Module 1 · Getting Started",
+      "lessons": [
+        {
+          "t": "HTML AND CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/HGTJBPNC-Gw?si=db4lmBu1EAd4uH0d\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML AND CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/qz0aGYrrlhU?si=OArRjjJkn1Wlf7vs\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/zutb5Clb_0Y?si=q3tPqAMw8oDmgU2S\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/kUMe1FH4CHE?si=HGTy_otyB8ZZcG2X\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/HD13eq_Pmp8?si=RlwHn4bI2wmHhb6W\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML AND CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/bWACo_pvKxg?si=8qtZ3NTV1RndRo7O\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/FQdaUv95mR8?si=cc3qwfyxFBBSLnue\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/AZS_0g0kJJw?si=q-6D3wtCo_8PAKI3\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "HTML AND CSS, JAVASCRIPT FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/wGVOtu0DoKk?si=Do4bllrL7M-DIeiG\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "Tailwind CSS Full Course",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/WvBnTJK7Khk?si=48XSRf9GHUPPwgp9\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        }
+      ]
+    },
+    {
+      "name": "Module 2 · CSS",
+      "lessons": [
+        {
+          "t": "CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/0hrJGWrCux0?si=jGvHRmniwRxvTSfU\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/-G-zic_LS0A?si=T-k0hQxlLx1gZgvS\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/OXGznpKZ_sA?si=UV24XfVWhSzI2o1M\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/n4R2E7O-Ngo?si=G5zciUOPvV5F4Epm\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "CSS FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/-G-zic_LS0A?si=Y11ldQKpZHf386W5\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        }
+      ]
+    },
+    {
+      "name": "Module 3 · New Section",
+      "lessons": [
+        {
+          "t": "hhhhh",
+          "d": "—",
+          "file": "videos/register_form.mp4"
+        }
+      ]
+    }
+  ]
+}

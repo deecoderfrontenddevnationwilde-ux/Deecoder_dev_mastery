@@ -1,0 +1,1136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up / Sign In |Deecoder DevMastery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="dm-api.js"></script>
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('dm_theme');
+                if (t !== 'light' && t !== 'dark') {
+                    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                }
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
+    <style>
+        :root {
+            --blue: #4f46e5;
+            --blue-dark: #4338ca;
+            --ink: #0f172a;
+            --border: rgba(148, 163, 184, 0.24);
+            --green: #10b981;
+            --red: #ef4444;
+            --bg: #f4f6fb;
+            --panel: #ffffff;
+            --muted: #475569;
+            --soft: #64748b;
+            --ring: rgba(79, 70, 229, 0.16);
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-padding-top: 64px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--ink);
+            overflow-x: hidden;
+            background: var(--bg);
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 92px 5% 48px;
+            background:
+                radial-gradient(ellipse 80% 50% at 10% -10%, rgba(99, 102, 241, 0.16), transparent 50%),
+                radial-gradient(ellipse 60% 40% at 100% 0%, rgba(79, 70, 229, 0.08), transparent 45%),
+                var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            transition: background .25s ease, color .2s ease;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 5%;
+            background: rgba(255, 255, 255, 0.94);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .topbar a.brand {
+            text-decoration: none;
+            color: var(--ink);
+            font-weight: 800;
+            font-size: 17px;
+            letter-spacing: -.03em;
+        }
+        .topbar a.brand span { color: var(--blue); }
+
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--soft);
+            cursor: pointer;
+            padding: 0;
+            transition: color .2s, border-color .2s, background .2s;
+        }
+        .theme-toggle:hover {
+            color: var(--blue);
+            border-color: rgba(79, 70, 229, 0.35);
+            background: rgba(79, 70, 229, 0.08);
+        }
+        .theme-toggle svg { width: 17px; height: 17px; display: block; }
+        .theme-toggle .icon-sun { display: none; }
+        .theme-toggle .icon-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+        .auth-layout {
+            display: grid;
+            grid-template-columns: minmax(220px, 0.9fr) minmax(300px, 1.15fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 920px;
+            align-items: stretch;
+            animation: enter .4s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        @keyframes enter {
+            from { opacity: 0; transform: translateY(12px) scale(.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .auth-intro {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 18px;
+            padding: 36px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.08);
+        }
+
+        .auth-intro::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.35), transparent 42%),
+                radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.2), transparent 40%);
+            pointer-events: none;
+        }
+
+        .auth-intro > * { position: relative; z-index: 1; }
+
+        .auth-mark {
+            width: 44px; height: 44px;
+            border-radius: 11px;
+            background: linear-gradient(145deg, #6366f1, #4f46e5);
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+            letter-spacing: -0.02em;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .auth-eyebrow {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #a5b4fc;
+            margin-bottom: 12px;
+        }
+
+        .auth-intro h2 {
+            font-size: clamp(1.65rem, 2.8vw, 2.05rem);
+            font-weight: 800;
+            line-height: 1.18;
+            letter-spacing: -0.04em;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+        .auth-intro h2 span { color: #c7d2fe; }
+
+        .auth-copy {
+            font-size: 14px;
+            line-height: 1.65;
+            color: #94a3b8;
+            margin-bottom: 22px;
+            max-width: 28em;
+        }
+
+        .auth-rule {
+            height: 1px;
+            background: rgba(148, 163, 184, 0.18);
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .auth-note {
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.55;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 30px 28px 26px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            min-width: 0;
+            transition: box-shadow .25s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 2px;
+            letter-spacing: -0.04em;
+            color: var(--ink);
+        }
+        .logo span { color: var(--blue); }
+
+        h1 {
+            font-size: clamp(1.25rem, 2.5vw, 1.45rem);
+            font-weight: 800;
+            margin: 10px 0 6px;
+            letter-spacing: -0.03em;
+            color: var(--ink);
+        }
+
+        p.sub {
+            font-size: 13.5px;
+            color: var(--soft);
+            margin-bottom: 20px;
+            line-height: 1.55;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 22px;
+            background: #f1f5f9;
+            padding: 3px;
+            border-radius: 11px;
+            border: 1px solid transparent;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            background: transparent;
+            border-radius: 9px;
+            font-size: 13.5px;
+            font-weight: 650;
+            color: var(--soft);
+            cursor: pointer;
+            transition: background .18s ease, color .18s ease, box-shadow .18s ease;
+            font-family: inherit;
+        }
+        .tab:hover { color: var(--ink); }
+        .tab.on {
+            background: #fff;
+            color: var(--blue-dark);
+            box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+            font-weight: 700;
+        }
+
+        label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            border: 1px solid #d8dee8;
+            border-radius: 10px;
+            font-size: 14.5px;
+            outline: none;
+            background: #fafbfc;
+            color: var(--ink);
+            font-family: inherit;
+            transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+        }
+        input::placeholder { color: #9aa6b8; }
+        input:hover { border-color: #c5cdd9; background: #fff; }
+        input:focus {
+            border-color: var(--blue);
+            background: #fff;
+            box-shadow: 0 0 0 3px var(--ring);
+        }
+        input.ok { border-color: var(--green); }
+        input.bad { border-color: var(--red); }
+
+        .password-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-field input { padding-right: 72px; }
+
+        .password-toggle {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--soft);
+            font-size: 12px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: color .15s, background .15s;
+        }
+        .password-toggle:hover {
+            color: var(--blue);
+            background: rgba(79, 70, 229, 0.08);
+        }
+
+        .fgroup { margin-bottom: 14px; }
+
+        .hint {
+            font-size: 11.5px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        .status {
+            font-size: 11.5px;
+            margin-top: 5px;
+            min-height: 16px;
+            font-weight: 600;
+        }
+        .status.ok { color: var(--green); }
+        .status.bad { color: var(--red); }
+
+        .orrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 2px 0 14px;
+            color: #94a3b8;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+        .orrow::before, .orrow::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        button[type=submit] {
+            width: 100%;
+            height: 46px;
+            margin-top: 6px;
+            padding: 0 16px;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.22);
+            transition: background .18s ease, transform .15s ease, box-shadow .18s ease;
+        }
+        button[type=submit]:hover {
+            background: var(--blue-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.28);
+        }
+        button[type=submit]:active { transform: translateY(0); }
+        button[type=submit]:disabled {
+            opacity: .6;
+            cursor: wait;
+            transform: none;
+        }
+
+        .msg {
+            display: none;
+            margin-top: 14px;
+            font-size: 13px;
+            padding: 11px 13px;
+            border-radius: 10px;
+            line-height: 1.5;
+        }
+        .msg.err {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+        .msg.ok {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+        .msg.show {
+            display: block;
+            animation: msgIn .28s ease;
+        }
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .shake { animation: shake .35s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 18px;
+            font-size: 13px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .row a {
+            color: var(--soft);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .15s;
+        }
+        .row a:hover { color: var(--blue); }
+
+        .perk {
+            margin-top: 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 12.5px;
+            color: #475569;
+            line-height: 1.55;
+        }
+
+
+
+        .forgot-panel {
+            margin-top: 4px;
+            animation: enter .35s ease both;
+        }
+        .forgot-panel[hidden],
+        #forgotStep1[hidden],
+        #forgotStep2[hidden],
+        #forgotStep3[hidden] {
+            display: none !important;
+        }
+        .forgot-back {
+            border: none;
+            background: transparent;
+            color: var(--soft);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 12px;
+        }
+        .forgot-back:hover { color: var(--blue); }
+        .forgot-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            margin-bottom: 6px;
+            color: var(--ink);
+        }
+        .forgot-btn {
+            width: 100%;
+            height: 46px;
+            margin-top: 6px;
+            border: none;
+            border-radius: 10px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 14.5px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(79, 70, 229, 0.22);
+            transition: background .18s, transform .15s;
+        }
+        .forgot-btn:hover { background: var(--blue-dark); }
+        .forgot-btn:disabled { opacity: .6; cursor: wait; }
+
+        .login-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 2px 0 14px;
+        }
+
+        .remember-me {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: 0;
+            margin: 0;
+            user-select: none;
+        }
+
+        .remember-me input {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            padding: 0;
+            accent-color: var(--blue);
+            cursor: pointer;
+            border-radius: 4px;
+            flex: none;
+        }
+
+        .forgot-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+            text-decoration: none;
+            transition: color .15s, opacity .15s;
+        }
+
+        .forgot-link:hover {
+            color: var(--blue-dark);
+            text-decoration: underline;
+        }
+
+        [data-theme="dark"] .remember-me { color: var(--soft); }
+        [data-theme="dark"] .forgot-link { color: #a5b4fc; }
+        [data-theme="dark"] .forgot-link:hover { color: #c7d2fe; }
+
+        /* Dark mode */
+        [data-theme="dark"] {
+            --ink: #e8eef9;
+            --muted: #94a3b8;
+            --soft: #94a3b8;
+            --border: rgba(148, 163, 184, 0.14);
+            --panel: #151c2c;
+            --bg: #0b1220;
+            --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            --ring: rgba(129, 140, 248, 0.22);
+        }
+
+        [data-theme="dark"] body {
+            background:
+                radial-gradient(ellipse 80% 50% at 10% -10%, rgba(99, 102, 241, 0.14), transparent 50%),
+                var(--bg);
+            color: var(--ink);
+        }
+        [data-theme="dark"] .topbar {
+            background: rgba(11, 18, 32, 0.94);
+            border-bottom-color: rgba(148, 163, 184, 0.12);
+        }
+        [data-theme="dark"] .topbar a.brand { color: #e8eef9; }
+        [data-theme="dark"] .card {
+            background: var(--panel);
+            border-color: var(--border);
+        }
+        [data-theme="dark"] .tabs { background: #0f172a; }
+        [data-theme="dark"] .tab { color: var(--soft); }
+        [data-theme="dark"] .tab.on {
+            background: rgba(99, 102, 241, 0.18);
+            color: #c7d2fe;
+            box-shadow: none;
+        }
+        [data-theme="dark"] input {
+            background: #0f172a;
+            border-color: rgba(148, 163, 184, 0.24);
+            color: #e8eef9;
+        }
+        [data-theme="dark"] input:hover,
+        [data-theme="dark"] input:focus {
+            background: #111827;
+            border-color: #818cf8;
+        }
+        [data-theme="dark"] .perk {
+            background: #0f172a;
+            border-color: var(--border);
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .password-toggle { color: #94a3b8; }
+        [data-theme="dark"] .row a { color: #94a3b8; }
+        [data-theme="dark"] .msg.err {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.28);
+            color: #fca5a5;
+        }
+        [data-theme="dark"] .msg.ok {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.28);
+            color: #6ee7b7;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 84px 16px 32px;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+            .auth-layout {
+                grid-template-columns: 1fr;
+                gap: 14px;
+                max-width: 440px;
+            }
+            .auth-intro {
+                padding: 24px 22px;
+                border-radius: 16px;
+            }
+            .auth-mark { margin-bottom: 14px; }
+            .auth-intro h2 { font-size: 1.45rem; }
+            .auth-copy { margin-bottom: 14px; font-size: 13.5px; }
+            .card { padding: 24px 20px; border-radius: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 76px 12px 24px; }
+            .auth-intro { padding: 18px 16px; border-radius: 14px; }
+            .auth-intro h2 { font-size: 1.28rem; }
+            .auth-copy, .auth-note { font-size: 13px; }
+            .card { padding: 20px 16px; border-radius: 14px; }
+            .logo { font-size: 18px; }
+            .tab { padding: 10px 6px; font-size: 12.5px; }
+            input {
+                font-size: 16px;
+                height: 46px;
+            }
+            .password-field input { padding-right: 68px; }
+        }
+    </style>
+        <link rel="stylesheet" href="/premium.css">
+    </head>
+
+<body>
+    <div class="topbar">
+        <a class="brand" href="/">Deecoder <span>DevMastery</span></a>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    </button>
+    </div>
+
+    
+
+    <main class="auth-layout">
+        <aside class="auth-intro" aria-label="DevMastery introduction">
+            <div class="auth-mark">DM</div>
+            <p class="auth-eyebrow">DEECODER DEVMastery</p>
+            <h2>Build with<br><span>confidence.</span></h2>
+            <p class="auth-copy">Focused engineering lessons for developers who care about craft, systems, and what comes next.</p>
+            <div class="auth-rule"></div>
+            <p class="auth-note">Your private learning workspace, designed for deep work.</p>
+        </aside>
+
+        <div class="card" id="card">
+            <div class="logo">Deecoder <span>DevMastery</span></div>
+            <h1 id="title">Create your free account</h1>
+            <p class="sub" id="subtitle">Sign up with your email <b>or</b> phone number, then pick a unique username.</p>
+
+        <div class="tabs">
+            <button class="tab on" id="tabRegister" type="button">Create account</button>
+            <button class="tab" id="tabLogin" type="button">Sign in</button>
+        </div>
+
+        <!-- ============ SIGN UP FORM ============ -->
+        <form id="formRegister">
+            <div class="fgroup">
+                <label for="rEmail">Email address</label>
+                <input id="rEmail" type="email" autocomplete="email" placeholder="you@example.com">
+                <div class="status" id="stEmail"></div>
+            </div>
+
+            <div class="orrow">OR</div>
+
+            <div class="fgroup">
+                <label for="rPhone">Phone number</label>
+                <input id="rPhone" type="tel" autocomplete="tel" placeholder="+234 803 123 4567">
+                <div class="hint">Include country code · digits only are fine too</div>
+                <div class="status" id="stPhone"></div>
+            </div>
+
+            <div class="fgroup">
+                <label for="rUser">Choose your username</label>
+                <input id="rUser" autocomplete="username" maxlength="20" placeholder="e.g. dev_deeco">
+                <div class="status" id="stUser"></div>
+            </div>
+
+            <div class="fgroup">
+                <label for="rPass">Password</label>
+                <div class="password-field">
+                    <input id="rPass" type="password" autocomplete="new-password" placeholder="••••••••">
+                    <button class="password-toggle" type="button" data-password-target="rPass" aria-label="Show password">Show</button>
+                </div>
+                <div class="hint">At least 6 characters</div>
+            </div>
+
+            <button type="submit" id="btnReg">Create account &amp; start watching</button>
+        </form>
+
+        <!-- ============ SIGN IN FORM ============ -->
+        <form id="formLogin" style="display:none">
+            <div class="fgroup">
+                <label for="lIdent">Email, phone, or username</label>
+                <input id="lIdent" autocomplete="username" placeholder="you@example.com · +234… · dev_deeco">
+            </div>
+            <div class="fgroup">
+                <label for="lPass">Password</label>
+                <div class="password-field">
+                    <input id="lPass" type="password" autocomplete="current-password" placeholder="••••••••">
+                    <button class="password-toggle" type="button" data-password-target="lPass" aria-label="Show password">Show</button>
+                </div>
+            </div>
+            <div class="login-options">
+                <label class="remember-me" for="lRemember">
+                    <input type="checkbox" id="lRemember" name="remember">
+                    <span>Remember me</span>
+                </label>
+                <a href="#forgot" id="forgotLink" class="forgot-link">Forgot password?</a>
+            </div>
+            <button type="submit" id="btnLog">Sign in &amp; watch</button>
+        </form>
+
+        
+        <!-- Password recovery (multi-step) -->
+        <div id="forgotPanel" class="forgot-panel" hidden>
+            <button type="button" class="forgot-back" id="forgotBack">← Back to sign in</button>
+            <h2 class="forgot-title" id="forgotTitle">Reset password</h2>
+            <p class="sub" id="forgotSub">Enter the email address on your account. We’ll send a verification code.</p>
+
+            <div id="forgotStep1">
+                <div class="fgroup">
+                    <label for="fIdent">Email address</label>
+                    <input id="fIdent" type="email" autocomplete="email" placeholder="you@example.com" required>
+                </div>
+                <button type="button" class="forgot-btn" id="forgotSend">Send code</button>
+            </div>
+
+            <div id="forgotStep2" hidden>
+                <div class="fgroup">
+                    <label for="fCode">Verification code</label>
+                    <input id="fCode" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code">
+                </div>
+                <button type="button" class="forgot-btn" id="forgotVerify">Verify code</button>
+            </div>
+
+            <div id="forgotStep3" hidden>
+                <div class="fgroup">
+                    <label for="fPass">New password</label>
+                    <div class="password-field">
+                        <input id="fPass" type="password" autocomplete="new-password" placeholder="At least 6 characters">
+                        <button class="password-toggle" type="button" data-password-target="fPass" aria-label="Show password">Show</button>
+                    </div>
+                </div>
+                <div class="fgroup">
+                    <label for="fPass2">Confirm new password</label>
+                    <div class="password-field">
+                        <input id="fPass2" type="password" autocomplete="new-password" placeholder="Repeat password">
+                        <button class="password-toggle" type="button" data-password-target="fPass2" aria-label="Show password">Show</button>
+                    </div>
+                </div>
+                <button type="button" class="forgot-btn" id="forgotReset">Update password</button>
+            </div>
+        </div>
+
+        <div class="msg err" id="msgErr" role="alert" aria-live="assertive"></div>
+        <div class="msg ok" id="msgOk" role="status" aria-live="polite"></div>
+
+        <div class="perk">🔐 Passwords are stored salted &amp; hashed on the server — never in plain text. Your
+            email/phone is only used to identify your account.</div>
+
+        <div class="row">
+            <a href="/">← Back to home</a>
+        </div>
+        </div>
+    </main>
+
+    <script>
+
+        (function () {
+            var btn = document.getElementById('themeToggle');
+            if (!btn) return;
+            function cur() { return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
+            function apply(t) {
+                document.documentElement.setAttribute('data-theme', t);
+                try { localStorage.setItem('dm_theme', t); } catch (e) {}
+                var d = t === 'dark';
+                btn.setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode');
+                btn.setAttribute('title', d ? 'Switch to light mode' : 'Switch to dark mode');
+            }
+            apply(cur());
+            btn.addEventListener('click', function () { apply(cur() === 'dark' ? 'light' : 'dark'); });
+        })();
+
+        /* next=/watch?l=3 style redirect target — used by SIGN IN only.
+           New registrations always go to the homepage (/). */
+        var params = new URLSearchParams(location.search);
+        var next = params.get('next') || '/watch';
+        if (next.charAt(0) !== '/') next = '/watch';
+
+        var USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
+        var EMAIL_RE = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
+
+        /* ---------- tab switching ---------- */
+        var tabR = document.getElementById('tabRegister');
+        var tabL = document.getElementById('tabLogin');
+        var formR = document.getElementById('formRegister');
+        var formL = document.getElementById('formLogin');
+
+        function setMode(m) {
+            tabR.classList.toggle('on', m === 'register');
+            tabL.classList.toggle('on', m === 'login');
+            formR.style.display = (m === 'register') ? '' : 'none';
+            formL.style.display = (m === 'login') ? '' : 'none';
+            document.getElementById('title').textContent =
+                m === 'register' ? 'Create your free account' : 'Welcome back';
+            document.getElementById('subtitle').innerHTML =
+                m === 'register'
+                    ? 'Sign up with your email <b>or</b> phone number, then pick a unique username.'
+                    : 'Sign in with your username, email, or phone number.';
+            hideMsgs();
+        }
+        tabR.addEventListener('click', function () { setMode('register'); });
+        tabL.addEventListener('click', function () { setMode('login'); });
+
+        document.querySelectorAll('.password-toggle').forEach(function (toggle) {
+            toggle.addEventListener('click', function () {
+                var input = document.getElementById(toggle.getAttribute('data-password-target'));
+                var visible = input.type === 'text';
+                input.type = visible ? 'password' : 'text';
+                toggle.textContent = visible ? 'Show' : 'Hide';
+                toggle.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+            });
+        });
+
+        /* ---------- messages ---------- */
+        function hideMsgs() {
+            document.getElementById('msgErr').classList.remove('show');
+            document.getElementById('msgOk').classList.remove('show');
+        }
+        function showErr(t) {
+            var m = document.getElementById('msgErr');
+            m.textContent = '✕ ' + t; m.classList.add('show');
+            var c = document.getElementById('card');
+            c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+        }
+        function showOk(t) {
+            var m = document.getElementById('msgOk');
+            m.textContent = '✔ ' + t; m.classList.add('show');
+        }
+
+        /* ---------- live availability checks (debounced) ---------- */
+        function wireCheck(inputId, statusId, field, formatFn) {
+            var inp = document.getElementById(inputId);
+            var st = document.getElementById(statusId);
+            var t = null;
+            inp.addEventListener('input', function () {
+                clearTimeout(t);
+                var v = inp.value.trim();
+                st.textContent = ''; st.className = 'status';
+                inp.classList.remove('ok', 'bad');
+                if (v === '') return;
+                var local = formatFn(v);
+                if (local !== true) {
+                    st.textContent = '✕ ' + local; st.className = 'status bad';
+                    inp.classList.add('bad');
+                    return;
+                }
+                t = setTimeout(function () {
+                    DM.checkAvailable(field, v).then(function (res) {
+                        if (inp.value.trim() !== v) return;   /* user kept typing */
+                        if (res.available) {
+                            st.textContent = field === 'username' ? '✓ username available' : '✓ available';
+                            st.className = 'status ok';
+                            inp.classList.add('ok'); inp.classList.remove('bad');
+                        } else {
+                            st.textContent = '✕ ' + (res.reason || 'Not available.');
+                            st.className = 'status bad';
+                            inp.classList.add('bad'); inp.classList.remove('ok');
+                        }
+                    }).catch(function () { /* server busy — silent, submit re-validates */ });
+                }, 350);
+            });
+        }
+        wireCheck('rUser', 'stUser', 'username', function (v) {
+            return USERNAME_RE.test(v) ? true : '3–20 characters: letters, numbers, underscore.';
+        });
+        wireCheck('rEmail', 'stEmail', 'email', function (v) {
+            return EMAIL_RE.test(v) ? true : "That doesn't look like a valid email.";
+        });
+        wireCheck('rPhone', 'stPhone', 'phone', function (v) {
+            var d = v.replace(/\D/g, '');
+            return (d.length >= 7 && d.length <= 15) ? true : 'Need 7–15 digits (include country code).';
+        });
+
+        /* ---------- already signed in? skip (honours ?next=) ---------- */
+        DM.me().then(function (me) {
+            if (me && me.authed) location.replace(next);
+        }).catch(function () { });
+
+        /* ---------- SIGN UP submit → always to the homepage ---------- */
+        document.getElementById('formRegister').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var btn = document.getElementById('btnReg');
+            var u = document.getElementById('rUser').value.trim();
+            var p = document.getElementById('rPass').value;
+            var em = document.getElementById('rEmail').value.trim();
+            var ph = document.getElementById('rPhone').value.trim();
+            hideMsgs();
+
+            if (!USERNAME_RE.test(u)) { showErr('Username must be 3–20 characters: letters, numbers, underscore.'); return; }
+            if (p.length < 6) { showErr('Password must be at least 6 characters.'); return; }
+            if (!em && !ph) { showErr('Provide an email address OR a phone number (at least one).'); return; }
+            if (em && !EMAIL_RE.test(em)) { showErr("That email doesn't look valid."); return; }
+            if (ph) { var d = ph.replace(/\D/g, ''); if (d.length < 7 || d.length > 15) { showErr('Phone needs 7–15 digits (include country code).'); return; } }
+
+            btn.disabled = true;
+            btn.textContent = 'Creating account…';
+            DM.register(u, p, em, ph).then(function () {
+                showOk('Account created! Taking you to the homepage…');
+                setTimeout(function () { location.href = '/'; }, 600);   /* ← new users land on index.html */
+            }).catch(function (err) {
+                btn.disabled = false;
+                btn.textContent = 'Create account & start watching';
+                if (err && err.status === 400) { showErr('Check the highlighted fields and try again.'); return; }
+                if (err && err.status === 409) { showErr('That username, email, or phone is already registered — try signing in.'); return; }
+                showErr('Server unreachable — is app.py running?');
+            });
+        });
+
+        /* ---------- SIGN IN submit → back to where the user came from ---------- */
+        
+        /* Remember me — restore saved identifier */
+        (function () {
+            try {
+                var saved = localStorage.getItem('dm_remember_id');
+                if (saved) {
+                    var idEl = document.getElementById('lIdent');
+                    var cb = document.getElementById('lRemember');
+                    if (idEl && !idEl.value) idEl.value = saved;
+                    if (cb) cb.checked = true;
+                }
+            } catch (e) { }
+        })();
+
+        document.getElementById('formLogin').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var btn = document.getElementById('btnLog');
+            var id = document.getElementById('lIdent').value.trim();
+            var p = document.getElementById('lPass').value;
+            var rememberEl = document.getElementById('lRemember');
+            var remember = !!(rememberEl && rememberEl.checked);
+            hideMsgs();
+
+            if (id === '') { showErr('Enter your username, email, or phone number.'); return; }
+            if (p === '') { showErr('Enter your password.'); return; }
+
+            btn.disabled = true;
+            btn.textContent = 'Signing in…';
+            DM.login(id, p, remember).then(function () {
+                try {
+                    if (remember) {
+                        localStorage.setItem('dm_remember_id', id);
+                    } else {
+                        localStorage.removeItem('dm_remember_id');
+                    }
+                } catch (e) { }
+                showOk('Signed in! Taking you to the lessons…');
+                setTimeout(function () { location.href = next; }, 500);
+            }).catch(function (err) {
+                btn.disabled = false;
+                btn.textContent = 'Sign in & watch';
+                if (err && err.status === 401) { showErr('Wrong credentials — check and try again.'); return; }
+                showErr('Server unreachable — is app.py running?');
+            });
+        });
+    
+
+        /* ── Forgot password multi-step flow ── */
+        (function () {
+            var link = document.getElementById('forgotLink');
+            var panel = document.getElementById('forgotPanel');
+            var formL = document.getElementById('formLogin');
+            var formR = document.getElementById('formRegister');
+            var tabs = document.querySelector('.tabs');
+            var title = document.getElementById('title');
+            var subtitle = document.getElementById('subtitle');
+            var state = { ident: '', resetToken: '' };
+
+            function showStep(n) {
+                document.getElementById('forgotStep1').hidden = n !== 1;
+                document.getElementById('forgotStep2').hidden = n !== 2;
+                document.getElementById('forgotStep3').hidden = n !== 3;
+                var titles = {
+                    1: ['Reset password', 'Enter the email address on your account. We’ll send a verification code.'],
+                    2: ['Enter code', 'Check your email inbox for the verification code.'],
+                    3: ['New password', 'Choose a new password for your account.']
+                };
+                document.getElementById('forgotTitle').textContent = titles[n][0];
+                document.getElementById('forgotSub').textContent = titles[n][1];
+            }
+
+            function openForgot() {
+                if (typeof hideMsgs === 'function') hideMsgs();
+                if (tabs) tabs.style.display = 'none';
+                if (formL) formL.style.display = 'none';
+                if (formR) formR.style.display = 'none';
+                if (title) title.style.display = 'none';
+                if (subtitle) subtitle.style.display = 'none';
+                panel.hidden = false;
+                var pre = (document.getElementById('lIdent') && document.getElementById('lIdent').value.trim()) || '';
+                if (pre) document.getElementById('fIdent').value = pre;
+                showStep(1);
+            }
+
+            function closeForgot() {
+                panel.hidden = true;
+                if (tabs) tabs.style.display = '';
+                if (title) title.style.display = '';
+                if (subtitle) subtitle.style.display = '';
+                var tabLogin = document.getElementById('tabLogin');
+                if (tabLogin) tabLogin.click();
+                else if (formL) formL.style.display = '';
+            }
+
+            if (link) link.addEventListener('click', function (e) {
+                e.preventDefault();
+                var tabLogin = document.getElementById('tabLogin');
+                if (tabLogin) tabLogin.click();
+                openForgot();
+            });
+            var back = document.getElementById('forgotBack');
+            if (back) back.addEventListener('click', closeForgot);
+
+            function setBusy(btn, on, label) {
+                if (!btn) return;
+                btn.disabled = !!on;
+                if (label) btn.textContent = label;
+            }
+
+            document.getElementById('forgotSend').addEventListener('click', function () {
+                var ident = document.getElementById('fIdent').value.trim();
+                hideMsgs();
+                if (!ident) { showErr('Enter your email address.'); return; }
+                if (ident.indexOf('@') < 0) { showErr('Password recovery uses email only.'); return; }
+                if (!DM.forgotRequest) { showErr('Update dm-api.js to enable password recovery.'); return; }
+                var btn = document.getElementById('forgotSend');
+                setBusy(btn, true, 'Sending…');
+                DM.forgotRequest(ident).then(function (data) {
+                    state.ident = ident;
+                    setBusy(btn, false, 'Send code');
+                    showOk((data && data.message) || 'Code sent.');
+                    showStep(2);
+                }).catch(function (err) {
+                    setBusy(btn, false, 'Send code');
+                    showErr((err && err.message) || 'Could not send code.');
+                });
+            });
+
+            document.getElementById('forgotVerify').addEventListener('click', function () {
+                var code = document.getElementById('fCode').value.trim();
+                hideMsgs();
+                if (!code) { showErr('Enter the verification code.'); return; }
+                var btn = document.getElementById('forgotVerify');
+                setBusy(btn, true, 'Verifying…');
+                DM.forgotVerify(state.ident, code).then(function (data) {
+                    state.resetToken = data.resetToken || data.reset_token;
+                    setBusy(btn, false, 'Verify code');
+                    showOk('Code verified. Set your new password.');
+                    showStep(3);
+                }).catch(function (err) {
+                    setBusy(btn, false, 'Verify code');
+                    showErr((err && err.message) || 'Invalid code.');
+                });
+            });
+
+            document.getElementById('forgotReset').addEventListener('click', function () {
+                var p1 = document.getElementById('fPass').value;
+                var p2 = document.getElementById('fPass2').value;
+                hideMsgs();
+                if (p1.length < 6) { showErr('Password must be at least 6 characters.'); return; }
+                if (p1 !== p2) { showErr('Passwords do not match.'); return; }
+                var btn = document.getElementById('forgotReset');
+                setBusy(btn, true, 'Updating…');
+                DM.forgotReset(state.ident, state.resetToken, p1).then(function () {
+                    setBusy(btn, false, 'Update password');
+                    showOk('Password updated. You can sign in now.');
+                    closeForgot();
+                    var idEl = document.getElementById('lIdent');
+                    if (idEl) idEl.value = state.ident;
+                    document.getElementById('lPass').value = '';
+                    document.getElementById('lPass').focus();
+                }).catch(function (err) {
+                    setBusy(btn, false, 'Update password');
+                    showErr((err && err.message) || 'Could not update password.');
+                });
+            });
+        })();
+
+
+    </script>
+</body>
+
+</html>

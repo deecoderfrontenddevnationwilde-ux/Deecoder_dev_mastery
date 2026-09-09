@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+secret.key
+users.json
+admin.json
+videos/*
+!videos/.gitkeep
+.env
+.venv/
+venv/

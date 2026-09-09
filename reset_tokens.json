@@ -1,0 +1,16 @@
+{
+  "tokens": {
+    "email:deecoderfrontenddevnationwide@gmail.com": {
+      "username": "shadow",
+      "channel": "email",
+      "dest": "deecoderfrontenddevnationwide@gmail.com",
+      "code_hash": "",
+      "expires": 1788958203.457081,
+      "sent_at": 1788957303.457081,
+      "attempts": 1,
+      "used": true,
+      "reset_token": null,
+      "reset_token_expires": 1788958221.6552444
+    }
+  }
+}

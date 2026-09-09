@@ -1,0 +1,30 @@
+{
+  "courseName": "Backend Engineering · Go Services & APIs",
+  "modules": [
+    {
+      "name": "Module 1 · Go Foundations",
+      "lessons": [
+        {
+          "t": "JAVA FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/eIrMbAQSU34?si=bPIINlGauWjELb6c\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "JAVA FULL COURSE",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/xTtL8E4LzTQ?si=3i1vMJ9uToC133Bd\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "JAVA FULL COURSE 3",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/A74TOX803D0?si=L9Rxuh3vx-2L2IuF\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        },
+        {
+          "t": "C for beginners",
+          "d": "—",
+          "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/xND0t1pr3KY?si=0QRyen1oOtb84CCg\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        }
+      ]
+    }
+  ]
+}

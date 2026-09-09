@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Policy | DevMastery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('dm_theme');
+                if (t !== 'light' && t !== 'dark') {
+                    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                }
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #475569;
+            --soft: #64748b;
+            --primary: #4f46e5;
+            --primary-strong: #4338ca;
+            --border: rgba(148, 163, 184, 0.28);
+            --nav-bg: rgba(255, 255, 255, 0.88);
+            --shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+            --body-glow: rgba(99, 102, 241, 0.12);
+            color-scheme: light;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0b1220;
+            --card: #151c2c;
+            --text: #e8eef9;
+            --muted: #94a3b8;
+            --soft: #94a3b8;
+            --primary: #818cf8;
+            --primary-strong: #6366f1;
+            --border: rgba(148, 163, 184, 0.14);
+            --nav-bg: rgba(11, 18, 32, 0.92);
+            --shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+            --body-glow: rgba(99, 102, 241, 0.1);
+            color-scheme: dark;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-padding-top: 64px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+            background: var(--bg);
+        }
+
+        body {
+            /* fixed-nav offset */
+            padding-top: 64px;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, var(--body-glow), transparent 32%),
+                var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            transition: background-color .25s ease, color .2s ease;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            z-index: 100;
+                        display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 5%;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+        
+            transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+            left: 0;
+            right: 0;
+            width: 100%;}
+
+        .topbar a.brand {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: -.03em;
+        }
+
+        .topbar a.brand span {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--soft);
+            cursor: pointer;
+            padding: 0;
+            transition: color .2s, border-color .2s, background .2s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary);
+            border-color: rgba(79, 70, 229, 0.35);
+            background: rgba(79, 70, 229, 0.08);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+
+        .theme-toggle .icon-moon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
+
+        .legal-shell {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 40px 5% 72px;
+        }
+
+        .legal-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--soft);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            transition: color .15s;
+        }
+
+        .legal-back:hover {
+            color: var(--primary);
+        }
+
+        .legal-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            font-weight: 800;
+            letter-spacing: -.03em;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .legal-lead {
+            font-size: 17px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            max-width: 42em;
+        }
+
+        .legal-updated {
+            font-size: 13px;
+            color: var(--soft);
+            margin-bottom: 36px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .legal-section {
+            margin-bottom: 28px;
+        }
+
+        .legal-section h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: -.01em;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .legal-section p {
+            font-size: 15px;
+            color: var(--muted);
+            max-width: 42em;
+        }
+
+        .legal-section a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .legal-section a:hover {
+            text-decoration: underline;
+        }
+
+        .legal-placeholder {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px dashed var(--border);
+            background: rgba(148, 163, 184, 0.06);
+            font-size: 13px;
+            color: var(--soft);
+        }
+
+        .legal-footer {
+            margin-top: 48px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--soft);
+        }
+
+        .legal-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .legal-shell {
+                padding: 28px 5% 56px;
+            }
+
+            .legal-lead {
+                font-size: 15px;
+            }
+
+            .legal-section p {
+                font-size: 14.5px;
+            }
+        }
+    </style>
+</head>
+
+<body class="legal-page">
+    <div class="topbar">
+        <a class="brand" href="/">Deecoder <span>DevMastery</span></a>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Toggle theme">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+        </button>
+    </div>
+
+    <main class="legal-shell">
+        <a class="legal-back" href="/">← Back to DevMastery</a>
+        <p class="legal-eyebrow">DEECODER DEVMASTERY</p>
+        <h1>Cookie Policy</h1>
+        <p class="legal-lead">This policy describes the browser storage and connections currently visible in the application.</p>
+        <p class="legal-updated">Last reviewed: September 7, 2026</p>
+
+        <section class="legal-section">
+            <h2>Necessary Session Cookie</h2>
+            <p>Flask uses a session cookie to keep a signed-in user or administrator authenticated. It is HttpOnly and SameSite=Lax. Without it, protected pages and APIs cannot maintain a session.</p>
+        </section>
+
+        <section class="legal-section">
+            <h2>Course Progress Storage</h2>
+            <p>The watch pages use localStorage keys for completed lesson indexes. This is browser-side functional storage, not an analytics identifier. It can be cleared through the browser's site-data controls.</p>
+        </section>
+
+        <section class="legal-section">
+            <h2>Third-Party Connections</h2>
+            <p>Google Fonts may be requested when pages load. YouTube may be requested when a YouTube lesson is started. These are third-party connections rather than application analytics cookies. No advertising or analytics scripts were found.</p>
+        </section>
+
+        <section class="legal-section">
+            <h2>Consent and Controls</h2>
+            <p>The current codebase does not load analytics or advertising technologies that would require a non-essential consent mechanism. A cookie banner has therefore not been added. If future analytics, advertising, or other non-essential storage is introduced, the owner should review consent requirements for the relevant jurisdictions before enabling it.</p>
+        </section>
+
+        <section class="legal-section">
+            <h2>Questions</h2>
+            <p>For questions about storage or cookies, call <a href="tel:09016815405">09016815405</a>.</p>
+            <p class="legal-placeholder">Document the site's operating jurisdiction and any future non-essential services before changing this policy or adding consent controls.</p>
+        </section>
+
+        <div class="legal-footer">
+            <p>Also see <a href="/privacy">Privacy Policy</a> · <a href="/terms">Terms &amp; Conditions</a></p>
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            var btn = document.getElementById('themeToggle');
+            if (!btn) return;
+            function cur() {
+                return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            }
+            function apply(t) {
+                document.documentElement.setAttribute('data-theme', t);
+                try { localStorage.setItem('dm_theme', t); } catch (e) { }
+                var d = t === 'dark';
+                btn.setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode');
+                btn.setAttribute('title', d ? 'Switch to light mode' : 'Switch to dark mode');
+            }
+            apply(cur());
+            btn.addEventListener('click', function () {
+                apply(cur() === 'dark' ? 'light' : 'dark');
+            });
+        })();
+    </script>
+</body>
+
+</html>

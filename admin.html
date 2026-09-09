@@ -1,0 +1,1734 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | DevMastery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="dm-api.js"></script>
+    <style>
+        
+        :root {
+            --blue: #4f46e5;
+            --blue-dark: #4338ca;
+            --ink: #0f172a;
+            --slate: #334155;
+            --text: #475569;
+            --muted: #64748b;
+            --faint: #94a3b8;
+            --border: rgba(148, 163, 184, 0.22);
+            --bg: #f4f7fb;
+            --green: #10b981;
+            --red: #ef4444;
+            --purple: #7c3aed;
+            --surface: rgba(255,255,255,0.9);
+            --shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            font-family: 'Inter', sans-serif;
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 28%),
+                linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer
+        }
+
+        input,
+        textarea,
+        select {
+            font-family: inherit
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            color: #fff;
+            padding: 14px 4%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            box-shadow: 0 18px 30px rgba(15, 23, 42, 0.12);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .topbar h2 {
+            font-size: 19px;
+            font-weight: 800
+        }
+
+        .topbar h2 span {
+            color: #818cf8
+        }
+
+        .tag {
+            background: rgba(148, 163, 184, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-left: 10px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .tb-actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap
+        }
+
+        .tb-btn {
+            background: rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 9px 13px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .tb-btn:hover {
+            background: rgba(30, 41, 59, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .tb-btn.accent {
+            background: linear-gradient(135deg, var(--blue) 0%, #6366f1 100%);
+            border-color: transparent;
+            color: #fff
+        }
+
+        .tb-btn.accent:hover {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, #4f46e5 100%);
+        }
+
+        .tb-btn.danger {
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.28)
+        }
+
+        .tb-btn.danger:hover {
+            background: rgba(127, 29, 29, 0.9);
+            color: #fff
+        }
+
+        .warnbar {
+            background: #fef3c7;
+            border-bottom: 1px solid #fcd34d;
+            color: #78350f;
+            font-size: 12.5px;
+            padding: 10px 4%;
+            display: none;
+            line-height: 1.55
+        }
+
+        .warnbar.show {
+            display: block
+        }
+
+        .outdatedbar {
+            background: #fef2f2;
+            border-bottom: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12.5px;
+            padding: 10px 4%;
+            display: none;
+            line-height: 1.55
+        }
+
+        .outdatedbar.show {
+            display: block
+        }
+
+        .layout {
+            max-width: 1280px;
+            margin: 22px auto 60px;
+            padding: 0 3%;
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            gap: 20px;
+            align-items: start;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 17px;
+            margin-bottom: 15px
+        }
+
+        .card h3 {
+            font-size: 12.5px;
+            font-weight: 700;
+            margin-bottom: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .05em
+        }
+
+        .side {
+            position: sticky;
+            top: 74px;
+            max-height: calc(100vh - 90px);
+            overflow-y: auto;
+            min-width: 0;
+        }
+
+        main {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .field label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: 6px
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #fff
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .15)
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px
+        }
+
+        .stat {
+            text-align: center;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 4px
+        }
+
+        .stat b {
+            display: block;
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--blue)
+        }
+
+        .stat span {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .03em
+        }
+
+        .mod-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            font-size: 13px;
+            color: var(--slate)
+        }
+
+        .mod-item:hover {
+            background: #f1f5f9
+        }
+
+        .mod-item.active {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: var(--blue-dark);
+            font-weight: 600
+        }
+
+        .m-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .cnt {
+            font-family: 'Fira Code', monospace;
+            font-size: 10.5px;
+            color: var(--faint)
+        }
+
+        .ibtn {
+            width: 25px;
+            height: 25px;
+            flex: none;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--faint);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .ibtn:hover {
+            background: #e2e8f0;
+            color: var(--slate)
+        }
+
+        .ibtn.danger:hover {
+            background: #fee2e2;
+            color: var(--red)
+        }
+
+        .add-mod {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px dashed var(--faint);
+            background: #fff;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--slate)
+        }
+
+        .add-mod:hover {
+            border-color: var(--blue);
+            color: var(--blue)
+        }
+
+        .rename-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            min-width: 0;
+        }
+
+        .rename-row h1 {
+            font-size: 20px;
+            font-weight: 800;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .lesson-row {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 9px;
+            min-width: 0;
+            flex-wrap: nowrap;
+        }
+
+        .lesson-row:hover {
+            border-color: #cbd5e1
+        }
+
+        .l-num {
+            width: 24px;
+            height: 24px;
+            flex: none;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-family: 'Fira Code', monospace;
+            color: var(--muted)
+        }
+
+        .thumb {
+            width: 62px;
+            height: 35px;
+            flex: none;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #e2e8f0;
+            border: 1px solid var(--border);
+            max-width: 100%;
+        }
+
+        .thumb.ph {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px
+        }
+
+        .l-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .l-t {
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.3;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .l-m {
+            font-family: 'Fira Code', monospace;
+            font-size: 10.5px;
+            color: var(--faint)
+        }
+
+        .badge {
+            flex: none;
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: .04em
+        }
+
+        .badge.yt {
+            background: #fef2f2;
+            color: #b91c1c
+        }
+
+        .badge.file {
+            background: #ecfdf5;
+            color: #047857
+        }
+
+        .row-actions {
+            display: flex;
+            gap: 1px;
+            flex: none
+        }
+
+        .empty {
+            padding: 40px 16px;
+            text-align: center;
+            color: var(--faint);
+            font-size: 14px;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            margin-bottom: 12px
+        }
+
+        .big-add {
+            width: 100%;
+            padding: 14px;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700
+        }
+
+        .big-add:hover {
+            background: var(--blue-dark)
+        }
+
+        .hintline {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 6px;
+            line-height: 1.5
+        }
+
+        .detect {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            margin-top: 7px;
+            font-weight: 500;
+            min-height: 18px
+        }
+
+        .detect.ok {
+            color: var(--green)
+        }
+
+        .detect.bad {
+            color: var(--red)
+        }
+
+        .prev-thumb {
+            margin-top: 9px;
+            width: 168px;
+            height: 95px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            display: none
+        }
+
+        .src-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 13px
+        }
+
+        .src-tab {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted)
+        }
+
+        .src-tab.on {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: var(--blue-dark)
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .55);
+            z-index: 200;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 36px 14px;
+            overflow: auto
+        }
+
+        .overlay.show {
+            display: flex
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 580px;
+            padding: 24px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, .35)
+        }
+
+        .modal h3 {
+            font-size: 17px;
+            font-weight: 800;
+            margin-bottom: 16px
+        }
+
+        .mbtns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px
+        }
+
+        .btn {
+            padding: 10px 19px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--slate)
+        }
+
+        .btn.primary {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff
+        }
+
+        .btn.primary:hover {
+            background: var(--blue-dark)
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translate(-50%, 12px);
+            background: var(--ink);
+            color: #fff;
+            padding: 12px 19px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: .25s;
+            max-width: 90vw
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0)
+        }
+
+        .toast i {
+            color: #34d399;
+            font-style: normal;
+            font-weight: 700;
+            margin-right: 7px
+        }
+
+        .toast.err i {
+            color: #f87171
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: var(--faint);
+            padding: 6px 16px 26px
+        }
+
+        /* ── drag & drop upload ── */
+        .dropzone {
+            border: 2px dashed var(--faint);
+            border-radius: 10px;
+            padding: 18px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            color: var(--muted);
+            font-size: 12.5px;
+            line-height: 1.6;
+            user-select: none
+        }
+
+        .dropzone:hover,
+        .dropzone:focus-visible {
+            border-color: var(--blue);
+            color: var(--blue);
+            outline: none
+        }
+
+        .dropzone.drag {
+            border-color: var(--blue);
+            background: #eff6ff;
+            color: var(--blue-dark);
+            transform: scale(1.01)
+        }
+
+        .dz-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px
+        }
+
+        .dz-sub {
+            font-size: 10.5px;
+            color: var(--faint)
+        }
+
+        .upl-list {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .upl-row {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px
+        }
+
+        .upl-name {
+            font-weight: 600;
+            color: var(--slate);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            margin-bottom: 5px
+        }
+
+        .upl-track {
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden
+        }
+
+        .upl-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--blue), var(--purple));
+            border-radius: 4px;
+            transition: width .2s
+        }
+
+        .upl-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 10.5px;
+            font-family: 'Fira Code', monospace
+        }
+
+        .upl-row.ok .upl-fill {
+            background: var(--green)
+        }
+
+        .upl-row.err {
+            border-color: #fecaca;
+            background: #fef2f2
+        }
+
+        .upl-row.err .upl-fill {
+            background: var(--red)
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1100px) {
+            .layout {
+                grid-template-columns: 260px 1fr;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin: 16px auto 40px;
+                padding: 0 3.5%;
+            }
+
+            .side {
+                position: static;
+                max-height: none;
+                overflow-y: visible;
+            }
+
+            .topbar {
+                padding: 12px 3.5%;
+                gap: 10px;
+            }
+
+            .topbar h2 {
+                font-size: 17px;
+            }
+
+            .tag {
+                margin-left: 6px;
+                font-size: 10px;
+                padding: 2px 8px;
+            }
+
+            .tb-btn {
+                padding: 8px 11px;
+                font-size: 12px;
+            }
+
+            .rename-row h1 {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px 4%;
+                gap: 10px;
+            }
+
+            .topbar > div:first-child {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .tag {
+                margin-left: 0;
+            }
+
+            .tb-actions {
+                width: 100%;
+                gap: 6px;
+            }
+
+            .tb-btn {
+                padding: 8px 10px;
+                font-size: 12px;
+                flex: 1 1 auto;
+                text-align: center;
+                min-width: calc(50% - 6px);
+            }
+
+            .layout {
+                padding: 0 3%;
+                margin: 12px auto 32px;
+                gap: 12px;
+            }
+
+            .card {
+                padding: 14px;
+            }
+
+            .stats {
+                gap: 6px;
+            }
+
+            .stat {
+                padding: 8px 2px;
+            }
+
+            .stat b {
+                font-size: 16px;
+            }
+
+            .stat span {
+                font-size: 9px;
+            }
+
+            .rename-row {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .rename-row h1 {
+                font-size: 16px;
+                width: 100%;
+                order: -1;
+            }
+
+            .lesson-row {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 10px;
+                align-items: flex-start;
+            }
+
+            .lesson-row .l-num {
+                order: 0;
+            }
+
+            .lesson-row .thumb {
+                width: 56px;
+                height: 32px;
+            }
+
+            .lesson-row .l-info {
+                flex: 1 1 calc(100% - 90px);
+                min-width: 120px;
+            }
+
+            .lesson-row .badge {
+                order: 3;
+            }
+
+            .lesson-row .row-actions {
+                width: 100%;
+                justify-content: flex-end;
+                gap: 2px;
+                margin-top: 2px;
+                padding-top: 6px;
+                border-top: 1px solid var(--border);
+            }
+
+            .l-t {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: unset;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .src-tabs {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .src-tab {
+                padding: 10px 8px;
+                font-size: 12.5px;
+            }
+
+            .modal {
+                padding: 18px 16px;
+                border-radius: 12px;
+            }
+
+            .modal h3 {
+                font-size: 16px;
+            }
+
+            .overlay {
+                padding: 16px 10px;
+                align-items: flex-start;
+            }
+
+            .mbtns {
+                flex-wrap: wrap;
+            }
+
+            .mbtns .btn {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+
+            .prev-thumb {
+                width: 100%;
+                max-width: 168px;
+                height: auto;
+                aspect-ratio: 16 / 9;
+            }
+
+            .dropzone {
+                padding: 14px 10px;
+                font-size: 12px;
+            }
+
+            .warnbar,
+            .outdatedbar {
+                padding: 10px 4%;
+                font-size: 12px;
+            }
+
+            .footer-note {
+                padding: 6px 12px 20px;
+                font-size: 11px;
+            }
+
+            .toast {
+                left: 12px;
+                right: 12px;
+                transform: translate(0, 12px);
+                max-width: none;
+                width: auto;
+                text-align: center;
+            }
+
+            .toast.show {
+                transform: translate(0, 0);
+            }
+
+            .field input,
+            .field textarea,
+            .field select {
+                font-size: 16px; /* prevents iOS zoom on focus */
+            }
+        }
+
+        @media (max-width: 400px) {
+            .tb-btn {
+                min-width: 100%;
+                font-size: 11.5px;
+                padding: 8px 8px;
+            }
+
+            .topbar h2 {
+                font-size: 16px;
+            }
+
+            .lesson-row .thumb {
+                display: none;
+            }
+
+            .stat b {
+                font-size: 15px;
+            }
+
+            .big-add {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .layout {
+                max-width: 1400px;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .layout {
+                max-width: 1520px;
+            }
+        }
+        
+    </style>
+        <link rel="stylesheet" href="/premium.css">
+    </head>
+
+<body>
+
+    <div class="topbar">
+        <div>
+            <h2>Dev<span>Mastery</span></h2><span class="tag">ADMIN PANEL · SIGNED IN</span>
+        </div>
+        <div class="tb-actions">
+            <a class="tb-btn accent" id="openWatchBtn" href="/watch">▶ Open Watch Page</a>
+            <button class="tb-btn" id="exportBtn">⬇ Export JSON</button>
+            <button class="tb-btn" id="importBtn">⬆ Import JSON</button>
+            <button class="tb-btn" id="resetBtn">🗑 Reset</button>
+            <button class="tb-btn danger" id="logoutBtn">⎋ Logout</button>
+        </div>
+    </div>
+
+    <div class="warnbar" id="warnBar">
+        ⚠ <b>Opened by double-click (file://).</b> Run the server instead:
+        <code>python app.py</code> then open <b>http://127.0.0.1:5000/admin</b> and sign in.
+    </div>
+
+    <div class="outdatedbar" id="outdatedBar"></div>
+
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+
+    <div class="layout">
+
+        <aside class="side">
+            <div class="card">
+                <h3>Course Settings</h3>
+                <div class="field" style="margin-bottom:12px"><label for="courseSel">Editing course</label>
+                    <select id="courseSel">
+                        <option value="main">Main course (course.json)</option>
+                        <option value="backend">Backend course (backend-course.json)</option>
+                    </select>
+                </div>
+                <div class="field"><label for="courseNameInput">Course name</label>
+                    <input id="courseNameInput" maxlength="70">
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⬆ Upload Videos</h3>
+                <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Upload videos">
+                    <span class="dz-icon">🎬</span>
+                    <b>Drag &amp; drop videos here</b><br>or click to browse from your laptop
+                    <div class="dz-sub">.mp4 · .webm · .mov · .m4v · .ogv · up to 2 GB each</div>
+                </div>
+                <input type="file" id="fileInput" accept=".mp4,.webm,.ogv,.ogg,.m4v,.mov,video/*" multiple hidden>
+                <div class="upl-list" id="uplList"></div>
+            </div>
+
+            <div class="card">
+                <h3>Overview</h3>
+                <div class="stats">
+                    <div class="stat"><b id="stMods">0</b><span>Modules</span></div>
+                    <div class="stat"><b id="stLessons">0</b><span>Lessons</span></div>
+                    <div class="stat"><b id="stTime">0m</b><span>Runtime</span></div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>🔐 Admin Password</h3>
+                <div class="field"><label for="pwCur">Current password</label>
+                    <input id="pwCur" type="password" autocomplete="current-password">
+                </div>
+                <div class="field" style="margin-top:10px"><label for="pwNew">New password (min 8)</label>
+                    <input id="pwNew" type="password" autocomplete="new-password">
+                </div>
+                <div class="field" style="margin-top:10px"><label for="pwNew2">Repeat new password</label>
+                    <input id="pwNew2" type="password" autocomplete="new-password">
+                </div>
+                <button class="add-mod" id="pwBtn" style="margin-top:12px;border-style:solid">Change admin
+                    password</button>
+            </div>
+            <div class="card">
+                <h3>Modules</h3>
+                <div id="moduleList"></div>
+                <button class="add-mod" id="addModBtn">＋ New module</button>
+            </div>
+        </aside>
+
+        <main>
+            <div class="rename-row">
+                <h1 id="modHeading">—</h1>
+                <button class="ibtn" id="renameModBtn" title="Rename module" aria-label="Rename module"
+                    style="width:31px;height:31px;font-size:14px">✏️</button>
+                <button class="ibtn danger" id="delModBtn" title="Delete module" aria-label="Delete module"
+                    style="width:31px;height:31px;font-size:14px">🗑️</button>
+            </div>
+            <div id="lessonsBox"></div>
+            <button class="big-add" id="bigAddBtn">＋&nbsp;&nbsp;Add a new lesson to this module</button>
+        </main>
+    </div>
+
+    <!-- ======== ADD / EDIT MODAL ======== -->
+    <div class="overlay" id="modalOverlay">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <h3 id="modalTitle">Add lesson</h3>
+            <div class="field" style="margin-bottom:13px"><label for="fTitle">Lesson title *</label>
+                <input id="fTitle" maxlength="90" placeholder="Titles with apostrophes are safe here">
+            </div>
+
+            <div class="src-tabs">
+                <button class="src-tab on" id="tabYt" type="button">▶ YouTube video</button>
+                <button class="src-tab" id="tabFile" type="button">🎞 My own file</button>
+            </div>
+
+            <div class="field" id="ytGroup">
+                <label for="fYt">YouTube link, embed iframe, or video ID</label>
+                <textarea id="fYt" rows="3"
+                    placeholder='<iframe ... src="https://www.youtube.com/embed/klUqEDQFC9c" ...></iframe>'></textarea>
+                <p class="hintline">YouTube → Share → Embed → paste the entire thing. A youtu.be link or bare ID work
+                    too.</p>
+                <div class="detect" id="detect"></div>
+                <img class="prev-thumb" id="prevThumb" alt="">
+            </div>
+
+            <div class="field" id="fileGroup" style="display:none">
+                <label for="fFileSel">Pick a file the server can see</label>
+                <select id="fFileSel">
+                    <option value="">— loading… —</option>
+                </select>
+                <p class="hintline">Uploaded via drag &amp; drop? Your file is already in this list. You can also drop
+                    files straight into the <b>videos</b> folder next to app.py. This list refreshes automatically after
+                    uploads.</p>
+                <label for="fFile" style="margin-top:12px">…or type a custom path</label>
+                <input id="fFile" placeholder="videos/my-lesson.mp4">
+            </div>
+
+            <div class="field" style="margin-top:13px;width:150px"><label for="fDur">Duration (optional)</label>
+                <input id="fDur" placeholder="12:45">
+            </div>
+
+            <div class="mbtns">
+                <button class="btn" id="cancelBtn" type="button">Cancel</button>
+                <button class="btn primary" id="saveBtn" type="button">Save lesson</button>
+            </div>
+        </div>
+    </div>
+
+    <p class="footer-note">Signed in session · saves go straight to the server (active course JSON) · uploaded videos
+        are shared by both courses · Logout ends your session</p>
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* ═══════════════════════════════════════════════
+           Admin — reached ONLY after server-side login.
+           Saves use the session cookie (no password prompts).
+           ═══════════════════════════════════════════════ */
+
+        var DEFAULT_DATA = {
+            courseName: 'Advanced React & Micro-Frontends',
+            modules: [
+                {
+                    name: 'Module 1 · Getting Started', lessons: [
+                        { t: 'Welcome — Course Trailer', d: '—', v: 'klUqEDQFC9c' },
+                        { t: 'Local sample (put any mp4 in videos/ as sample.mp4)', d: '—', file: 'videos/sample.mp4' }
+                    ]
+                }
+            ]
+        };
+
+        /* ---------- helpers ---------- */
+        function $(id) { return document.getElementById(id); }
+        function clone(o) { return JSON.parse(JSON.stringify(o)); }
+        function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+        var toastT = null;
+        function toast(m, isErr) {
+            var t = $('toast');
+            t.innerHTML = '<i>' + (isErr ? '✕' : '✔') + '</i>' + esc(m);
+            t.classList.toggle('err', !!isErr);
+            t.classList.add('show');
+            clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('show'); }, 3400);
+        }
+        function showOutdated(html) { var b = $('outdatedBar'); b.innerHTML = html; b.classList.add('show'); }
+        function hideOutdated() { $('outdatedBar').classList.remove('show'); }
+
+        var MSG_APP_OUTDATED =
+            '⛔ <b>app.py is outdated.</b> The server is running the old version without the multi-course API. '
+            + 'Replace <b>app.py</b> with the new version, restart it (<code>python app.py</code>), then refresh this page. '
+            + '<b>Nothing you save right now will stick.</b>';
+        var MSG_API_MISSING =
+            '🧩 <b>dm-api.js is missing or outdated</b> (the browser may have cached the old copy). '
+            + 'Replace <b>dm-api.js</b> in the project folder, then hard-refresh: <b>Ctrl+Shift+R</b> (Win) / <b>Cmd+Shift+R</b> (Mac).';
+        var MSG_SERVER_DOWN =
+            '📡 <b>Server unreachable.</b> Start it with <code>python app.py</code>, then refresh this page. '
+            + 'If you opened this file by double-click, use <b>http://127.0.0.1:5000/admin</b> instead.';
+
+        function extractId(raw) {
+            var s = String(raw == null ? '' : raw);
+            var m = s.match(/src\s*=\s*["']([^"']+)["']/i);
+            if (m) s = m[1];
+            m = s.match(/(?:youtube\.com\/(?:embed|shorts|live)\/|youtu\.be\/|[?&]v=)([A-Za-z0-9_-]{11})/);
+            if (m) return m[1];
+            s = s.trim();
+            return (/^[A-Za-z0-9_-]{11}$/.test(s)) ? s : null;
+        }
+
+        function durSeconds(d) {
+            if (!d || typeof d !== 'string' || d === '—') return 0;
+            var p = d.split(':'), s = 0;
+            for (var i = 0; i < p.length; i++) { if (!/^\d+$/.test(p[i])) return 0; s = s * 60 + (+p[i]); }
+            return s;
+        }
+        function fmtDur(sec) {
+            sec = Math.round(sec); if (sec <= 0) return '0m';
+            var h = Math.floor(sec / 3600), m = Math.ceil((sec % 3600) / 60);
+            if (m === 60) { h++; m = 0; }
+            return (h ? h + 'h ' : '') + ((h && m === 0) ? '' : m + 'm');
+        }
+
+        /* ---------- state ---------- */
+        var data = clone(DEFAULT_DATA), selMod = 0;
+
+        /* ---------- multi-course support ---------- */
+        var COURSES = {
+            main: {
+                load: function () { return DM.loadCourse(); },
+                save: function (d) { return DM.saveCourse(d); },
+                watch: '/watch', label: 'Main course', file: 'devmastery-main.json'
+            },
+            backend: {
+                load: function () { return DM.loadBackendCourse(); },
+                save: function (d) { return DM.saveBackendCourse(d); },
+                watch: '/watch-backend', label: 'Backend course', file: 'devmastery-backend.json'
+            }
+        };
+        var courseKey = 'main';
+        function apiLoad() { return COURSES[courseKey].load(); }
+        function apiSave(d) { return COURSES[courseKey].save(d); }
+        function currentWatch() { return COURSES[courseKey].watch; }
+        function updateWatchLink() {
+            var btn = $('openWatchBtn');
+            btn.href = currentWatch();
+            btn.textContent = (courseKey === 'backend') ? '▶ Open Backend Watch' : '▶ Open Watch Page';
+        }
+
+        /* ---------- session-based persistence ---------- */
+        function persist(showMsg) {
+            renderAll(false);
+            apiSave(data).then(function (res) {
+                hideOutdated();
+                if (showMsg !== false) toast('Saved on server — ' + res.lessons + ' lesson' + (res.lessons === 1 ? '' : 's') + ' live');
+            }).catch(function (err) {
+                var st = err && err.status ? err.status : 0;
+                if (st === 401) {
+                    toast('Session expired — redirecting to login…', true);
+                    setTimeout(function () { location.href = '/admin'; }, 1200);
+                } else if (st === 404) {
+                    showOutdated(MSG_APP_OUTDATED);
+                    toast('Save failed (404): app.py is outdated — replace it & restart', true);
+                } else {
+                    toast('Save failed (' + (st || 'network') + ') — is app.py running?', true);
+                }
+            });
+        }
+
+        /* ---------- logout ---------- */
+        $('logoutBtn').addEventListener('click', function () {
+            DM.logout().then(function () { location.href = '/'; })
+                .catch(function () { location.href = '/'; });
+        });
+
+        /* ---------- rendering ---------- */
+        function renderAll(listToo) {
+            updateWatchLink();
+            if (listToo !== false) renderModuleList();
+            renderLessons();
+            renderStats();
+            $('courseNameInput').value = data.courseName;
+        }
+
+        function renderModuleList() {
+            var h = '';
+            data.modules.forEach(function (mod, i) {
+                h += '<div class="mod-item' + (i === selMod ? ' active' : '') + '" data-i="' + i + '">'
+                    + '<span class="m-name">' + esc(mod.name) + '</span>'
+                    + '<span class="cnt">' + mod.lessons.length + '</span>'
+                    + (i > 0 ? '<button class="ibtn mv-up" title="Move up">↑</button>' : '')
+                    + (i < data.modules.length - 1 ? '<button class="ibtn mv-down" title="Move down">↓</button>' : '')
+                    + '<button class="ibtn danger del-mod" title="Delete module">✕</button>'
+                    + '</div>';
+            });
+            $('moduleList').innerHTML = h || '<p class="hintline">No modules yet — add one below.</p>';
+        }
+
+        function renderLessons() {
+            if (selMod >= data.modules.length) selMod = Math.max(0, data.modules.length - 1);
+            if (data.modules.length === 0) {
+                $('lessonsBox').innerHTML = '<div class="empty">No modules. Create one first.</div>';
+                $('modHeading').textContent = '—';
+                return;
+            }
+            var mod = data.modules[selMod];
+            $('modHeading').textContent = mod.name;
+
+            if (mod.lessons.length === 0) {
+                $('lessonsBox').innerHTML = '<div class="empty">📭 This module is empty.<br>Use "Add a new lesson" below.</div>';
+                return;
+            }
+            var h = '';
+            mod.lessons.forEach(function (l, li) {
+                var id = l.file ? null : extractId(l.v);
+                var thumb = id
+                    ? '<img class="thumb" src="https://i.ytimg.com/vi/' + id + '/mqdefault.jpg" alt="">'
+                    : '<span class="thumb ph">' + (l.file ? '🎞' : '❓') + '</span>';
+                h += '<div class="lesson-row">'
+                    + '<span class="l-num">' + (li + 1) + '</span>' + thumb
+                    + '<span class="l-info"><span class="l-t">' + esc(l.t) + '</span>'
+                    + '<span class="l-m">' + (l.file ? esc(l.file) : (l.d && l.d !== '—' ? esc(l.d) : 'duration not set')) + '</span></span>'
+                    + '<span class="badge ' + (l.file ? 'file' : 'yt') + '">' + (l.file ? 'FILE' : 'YT') + '</span>'
+                    + '<span class="row-actions">'
+                    + '<button class="ibtn test" title="Preview in player">▶</button>'
+                    + '<button class="ibtn" data-mv="-1" title="Move up"' + (li === 0 ? ' disabled style="opacity:.3"' : '') + '>↑</button>'
+                    + '<button class="ibtn" data-mv="1" title="Move down"' + (li === mod.lessons.length - 1 ? ' disabled style="opacity:.3"' : '') + '>↓</button>'
+                    + '<button class="ibtn" data-edit="' + li + '" title="Edit">✏️</button>'
+                    + '<button class="ibtn danger" data-del="' + li + '" title="Delete">🗑️</button>'
+                    + '</span></div>';
+            });
+            $('lessonsBox').innerHTML = h;
+        }
+
+        function flatIndexOf(mi, li) {
+            var n = 0;
+            for (var m = 0; m < mi; m++) n += data.modules[m].lessons.length;
+            return n + li;
+        }
+
+        function renderStats() {
+            var ll = 0, tt = 0;
+            data.modules.forEach(function (m) {
+                ll += m.lessons.length;
+                m.lessons.forEach(function (l) { tt += durSeconds(l.d); });
+            });
+            $('stMods').textContent = data.modules.length;
+            $('stLessons').textContent = ll;
+            $('stTime').textContent = fmtDur(tt);
+        }
+
+        /* ---------- server file dropdown ---------- */
+        function refreshVideoList() {
+            var sel = $('fFileSel');
+            DM.listVideos().then(function (res) {
+                sel.innerHTML = '';
+                var files = res.files || [];
+                if (!files.length) {
+                    sel.innerHTML = '<option value="">(videos folder is empty — drag & drop a video in the sidebar)</option>';
+                    return;
+                }
+                var first = document.createElement('option');
+                first.value = ''; first.textContent = '— pick a file (' + files.length + ' found) —';
+                sel.appendChild(first);
+                files.forEach(function (f) {
+                    var o = document.createElement('option');
+                    o.value = 'videos/' + f.name;
+                    var mb = Math.round(f.size / 1048576 * 10) / 10;
+                    o.textContent = f.name + ' (' + mb + ' MB)';
+                    sel.appendChild(o);
+                });
+            }).catch(function (err) {
+                if (err && err.status === 403) {
+                    sel.innerHTML = '<option value="">(session expired — refresh the page to log in)</option>';
+                } else {
+                    sel.innerHTML = '<option value="">(server unreachable — type the path manually below)</option>';
+                }
+            });
+        }
+        $('fFileSel').addEventListener('change', function () {
+            if (this.value) $('fFile').value = this.value;
+        });
+
+        /* ---------- drag & drop uploads ---------- */
+        var VIDEO_EXT_RE = /\.(mp4|webm|ogv|ogg|m4v|mov)$/i;
+
+        function humanMB(bytes) { return (bytes / 1048576).toFixed(1) + ' MB'; }
+
+        function handleUploadFiles(fileList) {
+            if (typeof DM === 'undefined' || typeof DM.uploadVideo !== 'function') {
+                toast('dm-api.js is outdated — replace it, then hard-refresh (Ctrl+Shift+R)', true);
+                return;
+            }
+            Array.prototype.forEach.call(fileList, function (f) {
+                if (!VIDEO_EXT_RE.test(f.name)) {
+                    toast('Skipped "' + f.name + '" — not a supported video file', true);
+                    return;
+                }
+                addUploadRow(f);
+            });
+        }
+
+        function addUploadRow(f) {
+            var list = $('uplList');
+            var row = document.createElement('div');
+            row.className = 'upl-row';
+            row.innerHTML = '<span class="upl-name">' + esc(f.name) + '</span>'
+                + '<div class="upl-track"><div class="upl-fill"></div></div>'
+                + '<div class="upl-meta"><span class="upl-pct">0%</span><span>' + humanMB(f.size) + '</span></div>';
+            list.insertBefore(row, list.firstChild);
+            var fill = row.querySelector('.upl-fill'), pct = row.querySelector('.upl-pct');
+
+            DM.uploadVideo(f, function (p) {
+                fill.style.width = p + '%'; pct.textContent = p + '%';
+            }).then(function (res) {
+                fill.style.width = '100%'; pct.textContent = 'done ✓';
+                row.classList.add('ok');
+                toast('Uploaded: ' + res.name + ' — now pick it in "My own file"');
+                refreshVideoList();
+                if (confirm('Create a lesson with "' + res.name + '" right now?\n\n(Cancel = it stays in the file dropdown for later)')) {
+                    openModal(null, 'videos/' + res.name);
+                }
+            }).catch(function (err) {
+                row.classList.add('err'); pct.textContent = 'failed';
+                var st = err && err.status ? err.status : 0;
+                var m = st === 413 ? 'over the 2 GB limit'
+                    : st === 400 ? 'unsupported file type'
+                        : st === 401 ? 'session expired — refresh the page'
+                            : st === 404 ? 'app.py outdated — replace & restart'
+                                : 'server unreachable — is app.py running?';
+                row.insertAdjacentHTML('beforeend', '<div class="upl-meta" style="color:var(--red)"><span>✕ ' + esc(m) + '</span></div>');
+                toast('Upload failed: ' + m, true);
+            });
+        }
+
+        (function wireDropzone() {
+            var dz = $('dropzone'), input = $('fileInput');
+
+            dz.addEventListener('click', function () { input.click(); });
+            dz.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+            });
+            input.addEventListener('change', function () {
+                if (this.files && this.files.length) handleUploadFiles(this.files);
+                this.value = '';   /* allow re-selecting the same file */
+            });
+
+            ['dragenter', 'dragover'].forEach(function (ev) {
+                dz.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); dz.classList.add('drag'); });
+            });
+            ['dragleave', 'dragend'].forEach(function (ev) {
+                dz.addEventListener(ev, function () { dz.classList.remove('drag'); });
+            });
+            dz.addEventListener('drop', function (e) {
+                e.preventDefault(); e.stopPropagation();
+                dz.classList.remove('drag');
+                if (e.dataTransfer && e.dataTransfer.files.length) handleUploadFiles(e.dataTransfer.files);
+            });
+
+            /* stop the browser from navigating away if a file is dropped outside the zone */
+            ['dragover', 'drop'].forEach(function (ev) {
+                document.addEventListener(ev, function (e) {
+                    if (!dz.contains(e.target)) { e.preventDefault(); }
+                });
+            });
+        })();
+
+        /* ---------- sidebar wiring ---------- */
+        $('courseNameInput').addEventListener('input', function () {
+            data.courseName = this.value.trim() || 'Untitled Course';
+            clearTimeout(window.__cnT);
+            window.__cnT = setTimeout(function () { persist(false); }, 600);
+        });
+
+        $('courseSel').addEventListener('change', function () {
+            var want = this.value;
+            if (want === courseKey) return;
+            if (!confirm('Switch to editing the ' + COURSES[want].label + '?')) { this.value = courseKey; return; }
+            courseKey = want; selMod = 0;
+            apiLoad().then(function (server) {
+                if (server && Array.isArray(server.modules) && server.modules.length) data = server;
+                hideOutdated();
+                renderAll(); refreshVideoList();
+                toast('Now editing: ' + COURSES[courseKey].label);
+            }).catch(function (err) {
+                var st = err && err.status ? err.status : 0;
+                if (st === 401) { location.href = '/admin'; return; }
+                if (st === 404) {
+                    showOutdated(MSG_APP_OUTDATED);
+                    toast('app.py is outdated — backend course API missing (404)', true);
+                    return;
+                }
+                toast('Could not load ' + COURSES[courseKey].label, true);
+            });
+        });
+
+        $('moduleList').addEventListener('click', function (e) {
+            var item = e.target.closest('.mod-item'); if (!item) return;
+            var i = +item.dataset.i;
+            if (e.target.classList.contains('mv-up')) {
+                var a = data.modules[i - 1]; data.modules[i - 1] = data.modules[i]; data.modules[i] = a;
+                selMod = i - 1; persist(); return;
+            }
+            if (e.target.classList.contains('mv-down')) {
+                var b = data.modules[i + 1]; data.modules[i + 1] = data.modules[i]; data.modules[i] = b;
+                selMod = i + 1; persist(); return;
+            }
+            if (e.target.classList.contains('del-mod')) {
+                var mod = data.modules[i];
+                if (confirm('Delete "' + mod.name + '" and its ' + mod.lessons.length + ' lesson(s)?')) {
+                    data.modules.splice(i, 1);
+                    selMod = Math.max(0, Math.min(selMod, data.modules.length - 1));
+                    persist();
+                } return;
+            }
+            selMod = i; renderAll();
+        });
+
+        $('addModBtn').addEventListener('click', function () {
+            data.modules.push({ name: 'Module ' + (data.modules.length + 1) + ' · New Section', lessons: [] });
+            selMod = data.modules.length - 1;
+            persist();
+            setTimeout(function () {
+                var nm = prompt('Name your new module:', data.modules[selMod].name);
+                if (nm && nm.trim()) data.modules[selMod].name = nm.trim().slice(0, 60);
+                persist();
+            }, 120);
+        });
+        $('renameModBtn').addEventListener('click', function () {
+            var mod = data.modules[selMod]; if (!mod) return;
+            var nm = prompt('Rename module:', mod.name);
+            if (nm && nm.trim()) { mod.name = nm.trim().slice(0, 60); persist(); }
+        });
+        $('delModBtn').addEventListener('click', function () {
+            if (!data.modules.length) return;
+            var mod = data.modules[selMod];
+            if (confirm('Delete "' + mod.name + '"?')) {
+                data.modules.splice(selMod, 1);
+                selMod = Math.max(0, data.modules.length - 1);
+                persist();
+            }
+        });
+
+        /* ---------- lessons wiring ---------- */
+        $('lessonsBox').addEventListener('click', function (e) {
+            var btn = e.target.closest('button'); if (!btn || btn.disabled) return;
+            var mod = data.modules[selMod]; if (!mod) return;
+            var row = e.target.closest('.lesson-row');
+            var li = row ? Array.prototype.indexOf.call($('lessonsBox').querySelectorAll('.lesson-row'), row) : -1;
+
+            if (btn.classList.contains('test')) { window.open(currentWatch() + '?l=' + flatIndexOf(selMod, li), '_blank'); return; }
+            if (btn.dataset.mv) {
+                var j = li + (+btn.dataset.mv);
+                if (j < 0 || j >= mod.lessons.length) return;
+                var t = mod.lessons[li]; mod.lessons[li] = mod.lessons[j]; mod.lessons[j] = t;
+                persist(); return;
+            }
+            if (btn.dataset.edit !== undefined) { openModal(+btn.dataset.edit); return; }
+            if (btn.dataset.del !== undefined) {
+                if (confirm('Delete lesson "' + mod.lessons[li].t + '"?')) { mod.lessons.splice(li, 1); persist(); }
+                return;
+            }
+        });
+        $('bigAddBtn').addEventListener('click', function () { openModal(null); });
+
+        /* ---------- modal ---------- */
+        var srcMode = 'yt', editIdx = null;
+
+        function openModal(idx, presetFile) {
+            var mod = data.modules[selMod];
+            if (!mod) { alert('Create a module first.'); return; }
+            editIdx = (idx === null || idx === undefined) ? null : idx;
+            $('modalTitle').textContent = editIdx === null ? 'Add lesson' : 'Edit lesson';
+            $('fTitle').value = editIdx === null ? '' : mod.lessons[editIdx].t;
+            $('fDur').value = (editIdx !== null && mod.lessons[editIdx].d !== '—') ? mod.lessons[editIdx].d : '';
+            var isFile = editIdx !== null && !!mod.lessons[editIdx].file;
+            setMode(isFile ? 'file' : 'yt');
+            $('fYt').value = (!isFile && editIdx !== null) ? mod.lessons[editIdx].v : '';
+            $('fFile').value = (isFile && editIdx !== null) ? mod.lessons[editIdx].file : '';
+            if (presetFile) { setMode('file'); $('fFile').value = presetFile; }
+            if (isFile) refreshVideoList();
+            runDetect();
+            $('modalOverlay').classList.add('show');
+            setTimeout(function () { $('fTitle').focus(); }, 60);
+        }
+        function closeModal() { $('modalOverlay').classList.remove('show'); }
+
+        function setMode(m) {
+            srcMode = m;
+            $('tabYt').classList.toggle('on', m === 'yt');
+            $('tabFile').classList.toggle('on', m === 'file');
+            $('ytGroup').style.display = m === 'yt' ? '' : 'none';
+            $('fileGroup').style.display = m === 'file' ? '' : 'none';
+            if (m === 'file') refreshVideoList();
+        }
+        $('tabYt').addEventListener('click', function () { setMode('yt'); runDetect(); });
+        $('tabFile').addEventListener('click', function () { setMode('file'); });
+
+        function runDetect() {
+            var val = $('fYt').value.trim(), det = $('detect'), th = $('prevThumb');
+            if (srcMode !== 'yt' || val === '') { det.textContent = ''; det.className = 'detect'; th.style.display = 'none'; return; }
+            var id = extractId(val);
+            if (id) {
+                det.className = 'detect ok'; det.textContent = '✓ Video detected: ' + id;
+                th.src = 'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg'; th.style.display = 'block';
+            }
+            else {
+                det.className = 'detect bad'; det.textContent = '✕ No video ID found — paste the embed code, a youtu.be link, or the bare ID.';
+                th.style.display = 'none';
+            }
+        }
+        $('fYt').addEventListener('input', runDetect);
+        $('cancelBtn').addEventListener('click', closeModal);
+        $('modalOverlay').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+
+        $('saveBtn').addEventListener('click', function () {
+            var mod = data.modules[selMod]; if (!mod) { alert('Create a module first.'); return; }
+            var t = $('fTitle').value.trim(), d = $('fDur').value.trim() || '—';
+            if (t === '') { alert('Enter a lesson title.'); $('fTitle').focus(); return; }
+
+            var lesson;
+            if (srcMode === 'yt') {
+                var v = $('fYt').value.trim();
+                if (v === '') { alert('Paste a YouTube link or embed code.'); $('fYt').focus(); return; }
+                if (!extractId(v)) { alert('That value has no YouTube video ID.\n\nPaste the embed iframe, a youtu.be link, or just the 11-character ID.'); $('fYt').focus(); return; }
+                lesson = { t: t, d: d, v: v };
+            } else {
+                var f = $('fFile').value.trim();
+                if (f === '') { alert('Pick a file from the dropdown or type a path.'); $('fFile').focus(); return; }
+                lesson = { t: t, d: d, file: f };
+            }
+            if (editIdx !== null) mod.lessons[editIdx] = lesson; else mod.lessons.push(lesson);
+            closeModal();
+            persist(true);
+        });
+
+        $('fDur').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('saveBtn').click(); });
+
+        /* ---------- change admin password ---------- */
+        $('pwBtn').addEventListener('click', function () {
+            var cur = $('pwCur').value, n1 = $('pwNew').value, n2 = $('pwNew2').value;
+            if (!cur) { alert('Enter your current password.'); return; }
+            if (n1.length < 8) { alert('New password must be at least 8 characters.'); return; }
+            if (n1 !== n2) { alert('The two new passwords do not match.'); return; }
+            $('pwBtn').disabled = true;
+            DM.changeAdminPassword(cur, n1).then(function () {
+                $('pwCur').value = ''; $('pwNew').value = ''; $('pwNew2').value = '';
+                $('pwBtn').disabled = false;
+                toast('Admin password changed — use it on next login');
+            }).catch(function (err) {
+                $('pwBtn').disabled = false;
+                if (err && err.status === 401) { alert('Current password is wrong.'); return; }
+                if (err && err.status === 400) { alert('New password must be at least 8 characters.'); return; }
+                alert('Could not reach the server.');
+            });
+        });
+
+        /* ---------- backup tools ---------- */
+        $('exportBtn').addEventListener('click', function () {
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob); a.download = COURSES[courseKey].file;
+            document.body.appendChild(a); a.click(); a.remove();
+            toast('Backup downloaded');
+        });
+        $('importBtn').addEventListener('click', function () { $('importFile').click(); });
+        $('importFile').addEventListener('change', function (e) {
+            var f = e.target.files[0]; if (!f) return;
+            var r = new FileReader();
+            r.onload = function () {
+                try {
+                    var p = JSON.parse(r.result);
+                    if (!p || !Array.isArray(p.modules)) throw new Error('shape');
+                    if (confirm('Replace ALL content in ' + COURSES[courseKey].label + ' with imported data (' + p.modules.length + ' modules)?')) {
+                        data = p; selMod = 0; persist(true);
+                    }
+                } catch (err) { alert('Not valid course JSON. Use an Export JSON file.'); }
+                $('importFile').value = '';
+            };
+            r.readAsText(f);
+        });
+        $('resetBtn').addEventListener('click', function () {
+            if (confirm('Reset ' + COURSES[courseKey].label + ' to starter demo content? This overwrites the server file.')) {
+                data = clone(DEFAULT_DATA); selMod = 0; persist(true);
+            }
+        });
+
+        /* ---------- boot ---------- */
+        if (location.protocol === 'file:') $('warnBar').classList.add('show');
+
+        renderAll();
+        refreshVideoList();
+
+        /* Version check FIRST — catch an outdated app.py / stale dm-api.js immediately */
+        if (typeof DM === 'undefined' || typeof DM.health !== 'function' || typeof DM.loadBackendCourse !== 'function') {
+            showOutdated(MSG_API_MISSING);
+            toast('dm-api.js is outdated — hard-refresh (Ctrl+Shift+R)', true);
+        } else {
+            DM.health().then(function (h) {
+                if (!h || !h.backendCourse) { showOutdated(MSG_APP_OUTDATED); toast('app.py is outdated — replace & restart', true); }
+            }).catch(function () {
+                showOutdated(MSG_SERVER_DOWN);
+            });
+
+            apiLoad().then(function (server) {
+                if (server && Array.isArray(server.modules) && server.modules.length) {
+                    data = server;
+                    renderAll();
+                    toast(COURSES[courseKey].label + ' loaded from server');
+                }
+            }).catch(function (err) {
+                var st = err && err.status ? err.status : 0;
+                if (st === 401) { location.href = '/admin'; return; }
+                if (st === 404) { showOutdated(MSG_APP_OUTDATED); return; }
+                showOutdated(MSG_SERVER_DOWN);
+            });
+        }
+    </script>
+</body>
+
+</html>
