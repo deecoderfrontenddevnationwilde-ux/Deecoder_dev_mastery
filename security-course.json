@@ -1,0 +1,35 @@
+{
+  "courseName": "App Security",
+  "modules": [
+    {
+      "name": "Module 1 · Auth & Secure Coding",
+      "lessons": [
+        {
+          "t": "OAuth 2.0 in practice",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Secure coding essentials",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    },
+    {
+      "name": "Module 2 · Testing",
+      "lessons": [
+        {
+          "t": "Penetration testing intro",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Threat modeling basics",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    }
+  ]
+}

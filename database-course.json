@@ -1,0 +1,35 @@
+{
+  "courseName": "Database Engineering",
+  "modules": [
+    {
+      "name": "Module 1 · Relational",
+      "lessons": [
+        {
+          "t": "PostgreSQL optimization",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Indexing & query plans",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    },
+    {
+      "name": "Module 2 · Caching & Document stores",
+      "lessons": [
+        {
+          "t": "Redis patterns",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "MongoDB data modeling",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    }
+  ]
+}

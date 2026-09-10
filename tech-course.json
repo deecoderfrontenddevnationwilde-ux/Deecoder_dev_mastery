@@ -1,0 +1,65 @@
+{
+  "courseName": "Technical Engineering Tracks",
+  "modules": [
+    {
+      "name": "DevOps & Cloud",
+      "lessons": [
+        {
+          "t": "Kubernetes, Docker & CI/CD Overview",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Terraform & AWS foundations (replace in admin)",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    },
+    {
+      "name": "AI Engineering",
+      "lessons": [
+        {
+          "t": "LLM Integration with Python",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Vector Databases & PyTorch (replace in admin)",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    },
+    {
+      "name": "App Security",
+      "lessons": [
+        {
+          "t": "OAuth 2.0 & Secure Coding Basics",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Penetration Testing intro (replace in admin)",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    },
+    {
+      "name": "Database Engineering",
+      "lessons": [
+        {
+          "t": "PostgreSQL Optimization",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Redis & MongoDB patterns (replace in admin)",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    }
+  ]
+}

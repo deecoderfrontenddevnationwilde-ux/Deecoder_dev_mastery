@@ -1397,8 +1397,27 @@
                 padding-right: max(5%, calc((100% - 1280px) / 2));
             }
         }
+    
+        a.services-items.track-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+            cursor: pointer;
+        }
+        a.services-items.track-link:hover {
+            transform: translateY(-2px);
+        }
+        a.services-items.track-link .track-cta {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--primary, #4f46e5);
+            letter-spacing: -.01em;
+        }
+
     </style>
-        <link rel="stylesheet" href="/premium.css">
     </head>
 
 <body>
@@ -1492,36 +1511,42 @@
         <section class="services" id="tracks">
             <h2 class="section-title">Curated <span>Career Paths</span></h2>
             <div class="grid-services">
-                <div class="services-items">
+                <a class="services-items track-link" href="/watch">
                     <div class="track-icon">⚡</div>
                     <h4>Frontend Architecture</h4>
                     <p>React, Next.js, Web Performance, Design Systems</p>
-                </div>
-                <div class="services-items">
+                    <span class="track-cta">Open Main Course →</span>
+                </a>
+                <a class="services-items track-link" href="/watch-backend">
                     <div class="track-icon">⚙️</div>
                     <h4>Backend &amp; Systems</h4>
                     <p>Node.js, Go, Microservices, Event-Driven Design</p>
-                </div>
-                <div class="services-items">
+                    <span class="track-cta">Open Backend Track →</span>
+                </a>
+                <a class="services-items track-link" href="/watch-devops">
                     <div class="track-icon">☁️</div>
                     <h4>DevOps &amp; Cloud</h4>
                     <p>Kubernetes, Docker, CI/CD, Terraform &amp; AWS</p>
-                </div>
-                <div class="services-items">
+                    <span class="track-cta">Open DevOps &amp; Cloud →</span>
+                </a>
+                <a class="services-items track-link" href="/watch-ai">
                     <div class="track-icon">🤖</div>
                     <h4>AI Engineering</h4>
                     <p>LLM Integration, Python, Vector Databases, PyTorch</p>
-                </div>
-                <div class="services-items">
+                    <span class="track-cta">Open AI Engineering →</span>
+                </a>
+                <a class="services-items track-link" href="/watch-security">
                     <div class="track-icon">🛡️</div>
                     <h4>App Security</h4>
                     <p>OAuth 2.0, Penetration Testing, Secure Coding</p>
-                </div>
-                <div class="services-items">
+                    <span class="track-cta">Open App Security →</span>
+                </a>
+                <a class="services-items track-link" href="/watch-database">
                     <div class="track-icon">📊</div>
                     <h4>Database Engineering</h4>
                     <p>PostgreSQL Optimization, Redis, MongoDB</p>
-                </div>
+                    <span class="track-cta">Open Database Engineering →</span>
+                </a>
             </div>
         </section>
 
@@ -1529,33 +1554,33 @@
         <section class="software" id="courses">
             <h2 class="section-title">Popular <span>Developer Courses</span></h2>
             <div class="software-grid">
-                <div class="software-card">
+                <div class="software-card" data-course-api="main" data-course-watch="/watch">
                     <span class="level-tag intermediate">Intermediate</span>
-                    <h3>Advanced React &amp; Micro-Frontends</h3>
+                    <h3 class="course-card-title">Advanced React &amp; Micro-Frontends</h3>
                     <p>Build scalable frontend ecosystems with state orchestration, custom hooks, and micro-frontend
                         isolation.</p>
                     <div class="card-footer">
-                        <span>18 Hours • 42 Lessons</span>
+                        <span class="course-meta" data-course-meta>…</span>
                         <a href="/watch" class="enroll-link">View Course →</a>
                     </div>
                 </div>
-                <div class="software-card">
+                <div class="software-card" data-course-api="backend" data-course-watch="/watch-backend">
                     <span class="level-tag advanced">Advanced</span>
-                    <h3>Building High-Throughput Go Services</h3>
+                    <h3 class="course-card-title">Building High-Throughput Go Services</h3>
                     <p>Master goroutines, memory allocation, channels, and high-performance API design from scratch.</p>
                     <div class="card-footer">
-                        <span>24 Hours • 58 Lessons</span>
+                        <span class="course-meta" data-course-meta>…</span>
                         <a href="/watch-backend" class="enroll-link">View Course →</a>
                     </div>
                 </div>
-                <div class="software-card">
+                <div class="software-card" data-course-api="devops" data-course-watch="/watch-devops">
                     <span class="level-tag beginner">All Levels</span>
-                    <h3>Production Kubernetes Architecture</h3>
+                    <h3 class="course-card-title">Production Kubernetes Architecture</h3>
                     <p>Deploy multi-region clusters, configure ingress controllers, zero-downtime releases, and
                         monitoring.</p>
                     <div class="card-footer">
-                        <span>15 Hours • 35 Lessons</span>
-                        <a href="/watch" class="enroll-link">View Course →</a>
+                        <span class="course-meta" data-course-meta>…</span>
+                        <a href="/watch-devops" class="enroll-link">View Course →</a>
                     </div>
                 </div>
             </div>
@@ -1833,6 +1858,108 @@
                 }
             }).catch(function () { });
         })();
+    </script>
+
+
+    <script>
+    (function () {
+        function parseDurationMinutes(raw) {
+            if (raw == null) return null;
+            var s = String(raw).trim();
+            if (!s || s === '—' || s === '-' || s === '–') return null;
+            // "12:30" or "1:05:00"
+            var colon = s.match(/^(\d+):(\d{2})(?::(\d{2}))?$/);
+            if (colon) {
+                if (colon[3] != null) {
+                    return (+colon[1]) * 60 + (+colon[2]) + (+colon[3]) / 60;
+                }
+                return (+colon[1]) + (+colon[2]) / 60;
+            }
+            // "45m", "1.5h", "90 min"
+            var hm = s.match(/^(\d+(?:\.\d+)?)\s*h(?:ours?)?/i);
+            if (hm) return parseFloat(hm[1]) * 60;
+            var mm = s.match(/^(\d+(?:\.\d+)?)\s*m(?:in(?:utes?)?)?/i);
+            if (mm) return parseFloat(mm[1]);
+            var num = s.match(/^(\d+(?:\.\d+)?)$/);
+            if (num) return parseFloat(num[1]); // assume minutes
+            return null;
+        }
+
+        function summarize(course) {
+            var modules = (course && course.modules) || [];
+            var lessons = 0;
+            var minutes = 0;
+            var known = 0;
+            modules.forEach(function (m) {
+                (m.lessons || []).forEach(function (les) {
+                    lessons += 1;
+                    var mins = parseDurationMinutes(les.d);
+                    if (mins != null && isFinite(mins) && mins > 0) {
+                        minutes += mins;
+                        known += 1;
+                    }
+                });
+            });
+            var hours;
+            if (known > 0) {
+                hours = Math.max(1, Math.round(minutes / 60));
+                // if total under 60 min, show 1 hour minimum only when there is content
+                if (minutes < 60 && lessons > 0) hours = Math.max(1, Math.ceil(minutes / 60));
+                if (minutes > 0 && minutes < 60) {
+                    // prefer showing sub-hour as "X min" when short
+                    return { lessons: lessons, label: Math.round(minutes) + ' min • ' + lessons + ' Lesson' + (lessons === 1 ? '' : 's') };
+                }
+            } else {
+                // No usable durations on lessons — do not invent marketing hours
+                hours = null;
+            }
+            if (hours == null) {
+                return { lessons: lessons, label: lessons + ' Lesson' + (lessons === 1 ? '' : 's') };
+            }
+            return {
+                lessons: lessons,
+                label: hours + ' Hour' + (hours === 1 ? '' : 's') + ' • ' + lessons + ' Lesson' + (lessons === 1 ? '' : 's')
+            };
+        }
+
+        function loaders() {
+            if (typeof DM === 'undefined') return null;
+            return {
+                main: DM.loadCourse && function () { return DM.loadCourse(); },
+                backend: DM.loadBackendCourse && function () { return DM.loadBackendCourse(); },
+                devops: DM.loadDevopsCourse && function () { return DM.loadDevopsCourse(); }
+            };
+        }
+
+        function apply() {
+            var map = loaders();
+            if (!map) return;
+            document.querySelectorAll('.software-card[data-course-api]').forEach(function (card) {
+                var key = card.getAttribute('data-course-api');
+                var meta = card.querySelector('[data-course-meta]');
+                var titleEl = card.querySelector('.course-card-title');
+                var fn = map[key];
+                if (!fn || !meta) return;
+                fn().then(function (course) {
+                    if (!course) return;
+                    // Prefer live course name from server when present
+                    if (titleEl && course.courseName) {
+                        titleEl.textContent = course.courseName;
+                    }
+                    var s = summarize(course);
+                    meta.textContent = s.label;
+                }).catch(function () {
+                    meta.textContent = 'Course stats unavailable';
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', apply);
+        } else {
+            apply();
+        }
+    })();
     </script>
 
 </body>

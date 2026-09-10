@@ -85,16 +85,6 @@
           "v": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/-G-zic_LS0A?si=Y11ldQKpZHf386W5\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
         }
       ]
-    },
-    {
-      "name": "Module 3 · New Section",
-      "lessons": [
-        {
-          "t": "hhhhh",
-          "d": "—",
-          "file": "videos/register_form.mp4"
-        }
-      ]
     }
   ]
 }

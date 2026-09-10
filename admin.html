@@ -38,12 +38,15 @@
         }
 
         html {
+            scroll-padding-top: 64px;
             font-family: 'Inter', sans-serif;
             color: var(--ink);
             overflow-x: hidden;
         }
 
         body {
+            /* fixed-nav offset */
+            padding-top: 60px;
             background:
                 radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 28%),
                 linear-gradient(180deg, #f8fafc 0%, #eef4ff 100%);
@@ -73,14 +76,17 @@
             background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
             color: #fff;
             padding: 14px 4%;
-            position: sticky;
+            position: fixed;
             top: 0;
             z-index: 100;
             flex-wrap: wrap;
             box-shadow: 0 18px 30px rgba(15, 23, 42, 0.12);
             width: 100%;
             box-sizing: border-box;
-        }
+        
+            transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+            left: 0;
+            right: 0;}
 
         .topbar h2 {
             font-size: 19px;
@@ -1021,7 +1027,6 @@
         }
         
     </style>
-        <link rel="stylesheet" href="/premium.css">
     </head>
 
 <body>
@@ -1057,6 +1062,11 @@
                     <select id="courseSel">
                         <option value="main">Main course (course.json)</option>
                         <option value="backend">Backend course (backend-course.json)</option>
+                        <option value="devops">DevOps &amp; Cloud (devops-course.json)</option>
+                        <option value="ai">AI Engineering (ai-course.json)</option>
+                        <option value="security">App Security (security-course.json)</option>
+                        <option value="database">Database Engineering (database-course.json)</option>
+                        <option value="tech">Technical tracks hub (tech-course.json)</option>
                     </select>
                 </div>
                 <div class="field"><label for="courseNameInput">Course name</label>
@@ -1248,7 +1258,33 @@
                 load: function () { return DM.loadBackendCourse(); },
                 save: function (d) { return DM.saveBackendCourse(d); },
                 watch: '/watch-backend', label: 'Backend course', file: 'devmastery-backend.json'
+            },
+            tech: {
+                load: function () { return DM.loadTechCourse(); },
+                save: function (d) { return DM.saveTechCourse(d); },
+                watch: '/watch-tech', label: 'Technical tracks', file: 'devmastery-tech.json'
+            },
+            devops: {
+                load: function () { return DM.loadDevopsCourse(); },
+                save: function (d) { return DM.saveDevopsCourse(d); },
+                watch: '/watch-devops', label: 'DevOps & Cloud', file: 'devmastery-devops.json'
+            },
+            ai: {
+                load: function () { return DM.loadAiCourse(); },
+                save: function (d) { return DM.saveAiCourse(d); },
+                watch: '/watch-ai', label: 'AI Engineering', file: 'devmastery-ai.json'
+            },
+            security: {
+                load: function () { return DM.loadSecurityCourse(); },
+                save: function (d) { return DM.saveSecurityCourse(d); },
+                watch: '/watch-security', label: 'App Security', file: 'devmastery-security.json'
+            },
+            database: {
+                load: function () { return DM.loadDatabaseCourse(); },
+                save: function (d) { return DM.saveDatabaseCourse(d); },
+                watch: '/watch-database', label: 'Database Engineering', file: 'devmastery-database.json'
             }
+
         };
         var courseKey = 'main';
         function apiLoad() { return COURSES[courseKey].load(); }
@@ -1257,7 +1293,15 @@
         function updateWatchLink() {
             var btn = $('openWatchBtn');
             btn.href = currentWatch();
-            btn.textContent = (courseKey === 'backend') ? '▶ Open Backend Watch' : '▶ Open Watch Page';
+            btn.textContent = ({
+                main: '▶ Open Watch Page',
+                backend: '▶ Open Backend Watch',
+                tech: '▶ Open Technical Watch',
+                devops: '▶ Open DevOps Watch',
+                ai: '▶ Open AI Watch',
+                security: '▶ Open Security Watch',
+                database: '▶ Open Database Watch'
+            })[courseKey] || '▶ Open Watch Page';
         }
 
         /* ---------- session-based persistence ---------- */

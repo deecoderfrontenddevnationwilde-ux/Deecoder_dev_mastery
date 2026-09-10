@@ -1,0 +1,35 @@
+{
+  "courseName": "AI Engineering",
+  "modules": [
+    {
+      "name": "Module 1 · LLMs & Python",
+      "lessons": [
+        {
+          "t": "LLM integration patterns",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Python tooling for AI apps",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    },
+    {
+      "name": "Module 2 · Data & Models",
+      "lessons": [
+        {
+          "t": "Vector databases",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "PyTorch fundamentals",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    }
+  ]
+}

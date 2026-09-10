@@ -70,6 +70,11 @@ _load_env_file()
 VIDEO_DIR = BASE / "videos"
 COURSE_FILE = BASE / "course.json"
 BACKEND_FILE = BASE / "backend-course.json"
+TECH_FILE = BASE / "tech-course.json"
+DEVOPS_FILE = BASE / "devops-course.json"
+AI_FILE = BASE / "ai-course.json"
+SECURITY_FILE = BASE / "security-course.json"
+DATABASE_FILE = BASE / "database-course.json"
 USERS_FILE = BASE / "users.json"
 ADMIN_FILE = BASE / "admin.json"
 SECRET_FILE = BASE / "secret.key"
@@ -97,6 +102,86 @@ DEFAULT_COURSE = {
             {"t": "Local sample (put any mp4 in videos/ as sample.mp4)", "d": "—",
              "file": "videos/sample.mp4"},
         ]},
+    ],
+}
+
+
+DEFAULT_TECH_COURSE = {
+    "courseName": "Technical Engineering Tracks",
+    "modules": [
+        {"name": "DevOps & Cloud", "lessons": [
+            {"t": "Kubernetes, Docker & CI/CD Overview", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Terraform & AWS foundations (replace in admin)", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+        {"name": "AI Engineering", "lessons": [
+            {"t": "LLM Integration with Python", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Vector Databases & PyTorch (replace in admin)", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+        {"name": "App Security", "lessons": [
+            {"t": "OAuth 2.0 & Secure Coding Basics", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Penetration Testing intro (replace in admin)", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+        {"name": "Database Engineering", "lessons": [
+            {"t": "PostgreSQL Optimization", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Redis & MongoDB patterns (replace in admin)", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+    ],
+}
+
+
+DEFAULT_DEVOPS_COURSE = {
+    "courseName": "DevOps & Cloud",
+    "modules": [
+        {"name": "Module 1 · Containers & Orchestration", "lessons": [
+            {"t": "Kubernetes fundamentals", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Docker for production workflows", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+        {"name": "Module 2 · Delivery & Cloud", "lessons": [
+            {"t": "CI/CD pipelines", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Terraform & AWS foundations", "d": "—", "v": "klUqEDQFC9c"},
+        ]}
+    ],
+}
+
+DEFAULT_AI_COURSE = {
+    "courseName": "AI Engineering",
+    "modules": [
+        {"name": "Module 1 · LLMs & Python", "lessons": [
+            {"t": "LLM integration patterns", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Python tooling for AI apps", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+        {"name": "Module 2 · Data & Models", "lessons": [
+            {"t": "Vector databases", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "PyTorch fundamentals", "d": "—", "v": "klUqEDQFC9c"},
+        ]}
+    ],
+}
+
+DEFAULT_SECURITY_COURSE = {
+    "courseName": "App Security",
+    "modules": [
+        {"name": "Module 1 · Auth & Secure Coding", "lessons": [
+            {"t": "OAuth 2.0 in practice", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Secure coding essentials", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+        {"name": "Module 2 · Testing", "lessons": [
+            {"t": "Penetration testing intro", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Threat modeling basics", "d": "—", "v": "klUqEDQFC9c"},
+        ]}
+    ],
+}
+
+DEFAULT_DATABASE_COURSE = {
+    "courseName": "Database Engineering",
+    "modules": [
+        {"name": "Module 1 · Relational", "lessons": [
+            {"t": "PostgreSQL optimization", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "Indexing & query plans", "d": "—", "v": "klUqEDQFC9c"},
+        ]},
+        {"name": "Module 2 · Caching & Document stores", "lessons": [
+            {"t": "Redis patterns", "d": "—", "v": "klUqEDQFC9c"},
+            {"t": "MongoDB data modeling", "d": "—", "v": "klUqEDQFC9c"},
+        ]}
     ],
 }
 
@@ -274,6 +359,13 @@ def _purge_expired_resets(data):
     return data
 
 
+
+# Email delivery notes (password reset):
+# - Sending via smtp.gmail.com as @gmail.com: Google applies its own SPF/DKIM.
+# - For a custom domain (e.g. mail@yourdomain.com), configure SPF/DKIM/DMARC at your DNS
+#   provider and set MAIL_SERVER / MAIL_FROM / MAIL_USERNAME / MAIL_PASSWORD accordingly.
+# - Recipient providers still control Inbox vs Spam; authentication + clean content only help odds.
+
 def _mail_from():
     """Official sender for password-reset emails (override with MAIL_FROM)."""
     return (os.getenv("MAIL_FROM") or "deecoderfrontenddevnationwide@gmail.com").strip()
@@ -300,8 +392,68 @@ def _mail_use_tls():
     return (os.getenv("MAIL_USE_TLS") or "1") != "0"
 
 
+
+def _resend_api_key():
+    return (os.getenv("RESEND_API_KEY") or "").strip()
+
+
+def _send_reset_via_resend(to_email, code, plain, html, subject, mail_from, from_name, reply_to):
+    """Transactional send via Resend HTTP API (preferred for inbox delivery)."""
+    import json as _json
+    import urllib.request
+    import urllib.error
+
+    key = _resend_api_key()
+    if not key:
+        raise RuntimeError("RESEND_API_KEY is not set")
+
+    payload = {
+        "from": "%s <%s>" % (from_name, mail_from),
+        "to": [to_email],
+        "subject": subject,
+        "text": plain,
+        "html": html,
+        "reply_to": reply_to,
+        "headers": {
+            "Auto-Submitted": "auto-generated",
+            "X-Entity-Ref-ID": secrets.token_hex(16),
+        },
+    }
+    data = _json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=data,
+        method="POST",
+        headers={
+            "Authorization": "Bearer %s" % key,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            body = resp.read().decode("utf-8", errors="replace")
+            if resp.status >= 300:
+                raise RuntimeError("Resend HTTP %s: %s" % (resp.status, body[:200]))
+            return body
+    except urllib.error.HTTPError as e:
+        err_body = e.read().decode("utf-8", errors="replace") if e.fp else ""
+        raise RuntimeError("Resend HTTP %s: %s" % (e.code, err_body[:300]))
+
+
+def mail_transport():
+    """Which transport production will use (no secrets returned)."""
+    if _resend_api_key():
+        return "resend"
+    if _mail_password() and _mail_server():
+        return "smtp"
+    return "none"
+
+
 def smtp_configured():
-    """True when server, from-address, and app password are available."""
+    """True when any password-reset email transport is available."""
+    if _resend_api_key():
+        return True
     return bool(_mail_server() and _mail_from() and _mail_password())
 
 
@@ -311,96 +463,105 @@ def twilio_configured():
 
 
 def send_reset_email(to_email, code):
-    """Send a transactional password-reset code via authenticated Gmail SMTP.
+    """Send password-reset code.
 
-    Credentials come only from environment variables (never hardcoded).
-    Gmail still decides Inbox vs Spam; this only optimizes for legitimate delivery.
+    Prefer Resend (RESEND_API_KEY) for production deliverability with a verified domain.
+    Fall back to SMTP (Gmail or other) via MAIL_* env vars.
+
+    Note: Free @gmail.com SMTP often lands in Spam even when authenticated. For reliable
+    Inbox placement, use a verified domain on a transactional provider (Resend, SES, etc.).
+    Recipient providers still control final placement.
     """
+    import uuid
+    from email.utils import formatdate, make_msgid
+
+    mail_from = _mail_from()
+    from_name = (os.getenv("MAIL_FROM_NAME") or "Deecoder DevMastery").strip()
+    reply_to = (os.getenv("MAIL_REPLY_TO") or mail_from).strip()
+    mins = max(1, RESET_CODE_TTL_SEC // 60)
+    subject = "Your DevMastery password reset code"
+
+    plain = (
+        "Deecoder DevMastery\n"
+        "\n"
+        "We received a request to reset the password for your account.\n"
+        "\n"
+        "Verification code: %s\n"
+        "\n"
+        "This code expires in %s minutes and can be used only once.\n"
+        "\n"
+        "If you did not request a password reset, you can ignore this message.\n"
+        "Do not share this code with anyone.\n"
+        "\n"
+        "— Deecoder DevMastery (automated security message)\n"
+    ) % (code, mins)
+
+    html = (
+        "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\">"
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+        "<title>Password reset</title></head>"
+        "<body style=\"margin:0;padding:24px;background:#f8fafc;"
+        "font-family:Arial,Helvetica,sans-serif;color:#0f172a;font-size:15px;line-height:1.5;\">"
+        "<p style=\"margin:0 0 12px 0;\"><strong>Deecoder DevMastery</strong></p>"
+        "<p style=\"margin:0 0 12px 0;\">We received a request to reset the password for your account.</p>"
+        "<p style=\"margin:0 0 8px 0;\">Verification code:</p>"
+        "<p style=\"margin:0 0 16px 0;font-size:22px;font-weight:700;letter-spacing:0.12em;\">%s</p>"
+        "<p style=\"margin:0 0 12px 0;color:#475569;\">This code expires in %s minutes and can be used only once.</p>"
+        "<p style=\"margin:0 0 12px 0;color:#475569;\">If you did not request a password reset, ignore this message. "
+        "Do not share this code with anyone.</p>"
+        "<p style=\"margin:16px 0 0 0;color:#94a3b8;font-size:12px;\">"
+        "Automated security message from Deecoder DevMastery</p>"
+        "</body></html>"
+    ) % (code, mins)
+
+    # Prefer transactional API when configured
+    if _resend_api_key():
+        # From address should be on a domain verified in Resend (not necessarily gmail.com)
+        resend_from = (os.getenv("RESEND_FROM") or mail_from).strip()
+        _send_reset_via_resend(
+            to_email, code, plain, html, subject, resend_from, from_name, reply_to
+        )
+        app.logger.info("password_reset_email transport=resend to_domain=%s", to_email.split("@")[-1])
+        return
+
+    # SMTP fallback (Gmail App Password or other SMTP)
     host = _mail_server()
     port = _mail_port()
     user = _mail_username()
     password = _mail_password()
-    mail_from = _mail_from()
     use_tls = _mail_use_tls()
-    from_name = (os.getenv("MAIL_FROM_NAME") or "Deecoder DevMastery").strip()
-    reply_to = (os.getenv("MAIL_REPLY_TO") or mail_from).strip()
-    mins = max(1, RESET_CODE_TTL_SEC // 60)
-
     if not password:
-        raise RuntimeError("MAIL_PASSWORD is not set")
+        raise RuntimeError("No email transport configured (set RESEND_API_KEY or MAIL_PASSWORD)")
 
+    domain = mail_from.split("@")[-1] if "@" in mail_from else "localhost"
     msg = EmailMessage()
-    msg["Subject"] = "Your DevMastery Password Reset Code"
+    msg["Subject"] = subject
     msg["From"] = "%s <%s>" % (from_name, mail_from)
     msg["To"] = to_email
     msg["Reply-To"] = reply_to
+    msg["Date"] = formatdate(localtime=True)
+    msg["Message-ID"] = make_msgid(domain=domain)
+    msg["MIME-Version"] = "1.0"
     msg["Auto-Submitted"] = "auto-generated"
     msg["X-Auto-Response-Suppress"] = "All"
-    msg["Precedence"] = "auto_reply"
-
-    plain = (
-        "Deecoder DevMastery — password reset\n"
-        "\n"
-        "We received a request to reset the password for this email address.\n"
-        "\n"
-        "Your verification code: %s\n"
-        "\n"
-        "This code expires in %s minutes and can be used only once.\n"
-        "If you did not request a password reset, you can ignore this message.\n"
-        "Someone else may have typed your email by mistake.\n"
-        "\n"
-        "For security, never share this code with anyone.\n"
-        "\n"
-        "— Deecoder DevMastery\n"
-        "This is an automated security message related to your account.\n"
-    ) % (code, mins)
-    plain = plain.replace("\\n", chr(10))
-
-    html = """<!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f4f6fb;font-family:Inter,Segoe UI,Arial,sans-serif;color:#0f172a;">
-  <table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="background:#f4f6fb;padding:24px 12px;">
-    <tr><td align="center">
-      <table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="max-width:480px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:28px 24px;">
-        <tr><td style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4f46e5;padding-bottom:12px;">
-          Deecoder DevMastery
-        </td></tr>
-        <tr><td style="font-size:18px;font-weight:700;padding-bottom:10px;">
-          Password reset code
-        </td></tr>
-        <tr><td style="font-size:14px;line-height:1.55;color:#475569;padding-bottom:18px;">
-          We received a request to reset the password for this email address.
-          Use the verification code below. It expires in %s minutes and can be used only once.
-        </td></tr>
-        <tr><td align="center" style="padding:16px 0 20px;">
-          <div style="display:inline-block;font-size:28px;font-weight:700;letter-spacing:0.18em;color:#0f172a;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:14px 22px;">
-            %s
-          </div>
-        </td></tr>
-        <tr><td style="font-size:13px;line-height:1.5;color:#64748b;padding-bottom:8px;">
-          If you did not request a password reset, you can ignore this message.
-        </td></tr>
-        <tr><td style="font-size:12px;line-height:1.5;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:14px;">
-          This is an automated security message from Deecoder DevMastery.
-          Never share this code with anyone.
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>
-""" % (mins, code)
-
+    msg["X-Entity-Ref-ID"] = uuid.uuid4().hex
     msg.set_content(plain)
     msg.add_alternative(html, subtype="html")
 
-    with smtplib.SMTP(host, port, timeout=25) as smtp:
+    with smtplib.SMTP(host, port, timeout=30) as smtp:
+        smtp.ehlo()
         if use_tls:
             smtp.starttls()
+            smtp.ehlo()
         smtp.login(user, password)
-        # envelope sender matches authenticated account
         smtp.send_message(msg, from_addr=mail_from, to_addrs=[to_email])
+    app.logger.info(
+        "password_reset_email transport=smtp host=%s from_domain=%s to_domain=%s",
+        host,
+        domain,
+        to_email.split("@")[-1],
+    )
+
 
 
 def send_reset_sms(to_phone, code):
@@ -796,6 +957,91 @@ def save_backend_course():
     return jsonify(ok=True, modules=len(data["modules"]), lessons=n)
 
 
+@app.get("/api/tech-course")
+@api_login_required
+def get_tech_course():
+    return jsonify(load_named_course(TECH_FILE, DEFAULT_TECH_COURSE))
+
+
+@app.post("/api/tech-course")
+@admin_required
+def save_tech_course():
+    data = sanitize_course(request.get_json(silent=True))
+    if data is None:
+        return jsonify(error="bad payload"), 400
+    write_json(TECH_FILE, data)
+    n = sum(len(m["lessons"]) for m in data["modules"])
+    return jsonify(ok=True, modules=len(data["modules"]), lessons=n)
+
+@app.get("/api/devops-course")
+@api_login_required
+def get_devops_course():
+    return jsonify(load_named_course(DEVOPS_FILE, DEFAULT_DEVOPS_COURSE))
+
+
+@app.post("/api/devops-course")
+@admin_required
+def save_devops_course():
+    data = sanitize_course(request.get_json(silent=True))
+    if data is None:
+        return jsonify(error="bad payload"), 400
+    write_json(DEVOPS_FILE, data)
+    n = sum(len(m["lessons"]) for m in data["modules"])
+    return jsonify(ok=True, modules=len(data["modules"]), lessons=n)
+
+
+@app.get("/api/ai-course")
+@api_login_required
+def get_ai_course():
+    return jsonify(load_named_course(AI_FILE, DEFAULT_AI_COURSE))
+
+
+@app.post("/api/ai-course")
+@admin_required
+def save_ai_course():
+    data = sanitize_course(request.get_json(silent=True))
+    if data is None:
+        return jsonify(error="bad payload"), 400
+    write_json(AI_FILE, data)
+    n = sum(len(m["lessons"]) for m in data["modules"])
+    return jsonify(ok=True, modules=len(data["modules"]), lessons=n)
+
+
+@app.get("/api/security-course")
+@api_login_required
+def get_security_course():
+    return jsonify(load_named_course(SECURITY_FILE, DEFAULT_SECURITY_COURSE))
+
+
+@app.post("/api/security-course")
+@admin_required
+def save_security_course():
+    data = sanitize_course(request.get_json(silent=True))
+    if data is None:
+        return jsonify(error="bad payload"), 400
+    write_json(SECURITY_FILE, data)
+    n = sum(len(m["lessons"]) for m in data["modules"])
+    return jsonify(ok=True, modules=len(data["modules"]), lessons=n)
+
+
+@app.get("/api/database-course")
+@api_login_required
+def get_database_course():
+    return jsonify(load_named_course(DATABASE_FILE, DEFAULT_DATABASE_COURSE))
+
+
+@app.post("/api/database-course")
+@admin_required
+def save_database_course():
+    data = sanitize_course(request.get_json(silent=True))
+    if data is None:
+        return jsonify(error="bad payload"), 400
+    write_json(DATABASE_FILE, data)
+    n = sum(len(m["lessons"]) for m in data["modules"])
+    return jsonify(ok=True, modules=len(data["modules"]), lessons=n)
+
+
+
 @app.get("/api/videos")
 def list_videos():
     if not session.get("admin"):
@@ -878,6 +1124,36 @@ def watch_page():
 @page_login_required
 def watch_backend_page():
     return send_file(BASE / "watch-backend.html")
+
+
+@app.get("/watch-tech")
+@page_login_required
+def watch_tech_page():
+    return send_file(BASE / "watch-tech.html")
+
+@app.get("/watch-devops")
+@page_login_required
+def watch_devops_page():
+    return send_file(BASE / "watch-devops.html")
+
+
+@app.get("/watch-ai")
+@page_login_required
+def watch_ai_page():
+    return send_file(BASE / "watch-ai.html")
+
+
+@app.get("/watch-security")
+@page_login_required
+def watch_security_page():
+    return send_file(BASE / "watch-security.html")
+
+
+@app.get("/watch-database")
+@page_login_required
+def watch_database_page():
+    return send_file(BASE / "watch-database.html")
+
 
 
 @app.get("/dm-api.js")
@@ -1001,6 +1277,7 @@ if __name__ == "__main__":
         "\n    Courses: course.json (main) · backend-course.json (backend)"
         f"\n    Uploads: drag & drop in admin · {MAX_UPLOAD_MB} MB max per file"
         f"\n    Lesson videos folder: {VIDEO_DIR}"
+        f"\n    Mail transport: {mail_transport()}"
         f"\n    Mail reset: {'configured → ' + _mail_from() if smtp_configured() else 'NOT configured (set MAIL_PASSWORD App Password)'}"
         f"\n    SMS reset:  {'configured' if twilio_configured() else 'NOT configured (set TWILIO_*)'}"
         "\n──────────────────────────────────────────────────────\n"

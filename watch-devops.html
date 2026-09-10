@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch | DevMastery</title>
+    <title>Watch · DevOps & Cloud | DevMastery</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -193,11 +193,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 14px;
+            gap: 12px;
             background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
             padding: 0 4%;
             box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             border-bottom: 1px solid rgba(148, 163, 184, 0.12);
             width: 100%;
             box-sizing: border-box;
@@ -242,12 +242,9 @@
             border-color: var(--blue)
         }
 
-        .lesson-pos {
-            font-family: 'Fira Code', monospace;
-            font-size: 12px;
-            color: #cbd5e1;
-            white-space: nowrap
-        }
+        /* superseded by header layout fix */
+        .lesson-pos-old-placeholder { display: none; }
+
 
         .watch-main {
             width: 100%;
@@ -921,20 +918,20 @@
             color: var(--ink, #0f172a);
         }
 
-        .crumb {
-            font-size: 12px;
-            color: var(--muted);
-            font-weight: 600;
-            margin-bottom: 6px;
-            letter-spacing: .04em;
-        }
-
         .navbtns {
             display: flex;
             gap: 8px;
             flex: none;
             flex-wrap: wrap;
             align-items: center;
+        }
+
+        .crumb {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: .04em;
         }
 
         .nb {
@@ -971,7 +968,7 @@
         .nb.done {
             background: #ecfdf5;
             border-color: #a7f3d0;
-            color: #047857;
+            color: #047857
         }
 
         /* ── dark footer (landing style) ── */
@@ -1200,7 +1197,7 @@
             }
 
             .l-d {
-                display: none;
+                display: none; /* free horizontal space on phones */
             }
 
             .vwrap {
@@ -1214,7 +1211,7 @@
             }
 
             .vvolwrap {
-                display: none;
+                display: none; /* mute still available via keyboard; frees control bar */
             }
 
             .vvol {
@@ -1648,6 +1645,66 @@
             color: var(--blue, #4f46e5);
         }
 
+    
+        /* Keep lesson position visible; nav scrolls, progress stays pinned */
+        header.main-header {
+            flex-wrap: nowrap;
+            gap: 12px;
+            min-height: 48px;
+            align-items: center;
+        }
+        header.main-header .list {
+            min-width: 0;
+            flex: 1 1 auto;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        header.main-header ul {
+            gap: 1.1rem;
+            flex-wrap: nowrap;
+            min-width: max-content;
+            padding-right: 8px;
+        }
+        header.main-header ul li a {
+            font-size: 13px;
+            white-space: nowrap;
+            padding: 14px 0;
+        }
+        .lesson-pos {
+            flex: 0 0 auto;
+            white-space: nowrap;
+            margin-left: 8px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            color: #e2e8f0;
+            font-size: 12.5px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            z-index: 2;
+            position: relative;
+            max-width: 42%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (max-width: 640px) {
+            .lesson-pos {
+                max-width: 48%;
+                font-size: 11.5px;
+                padding: 5px 8px;
+            }
+            header.main-header ul {
+                gap: 0.85rem;
+            }
+            header.main-header ul li a {
+                font-size: 12.5px;
+                padding: 12px 0;
+            }
+        }
+
     </style>
     </head>
 
@@ -1670,7 +1727,7 @@
             <a href="/login" class="btn-secondary" id="signInLink">Sign In / Create Account</a>
             <span class="who" id="who"></span>
             <a href="/login" class="btn-secondary" id="signOutLink" style="display:none">Sign Out</a>
-            <a href="/watch" class="btn-primary" id="nextCta">Next Lesson ▶</a>
+            <a href="/watch-backend" class="btn-primary" id="nextCta">Next Lesson ▶</a>
         </div>
     </nav>
 
@@ -1678,12 +1735,14 @@
     <header class="main-header">
         <div class="list">
             <ul>
-                <li><a href="/watch" class="active">Main Course</a></li>
-                <li><a href="/watch-backend">Backend Track</a>
-                <li><a href="/watch-tech">Technical Tracks</a></li>
-                <li><a href="/#tracks">Career Paths</a></li>
-                <li><a href="/#pricing">Pricing</a></li>
-                <li><a href="/#community">Community</a></li>
+            
+                <li><a href="/watch">Main Course</a></li>
+                <li><a href="/watch-backend">Backend Track</a></li>
+                <li><a href="/watch-devops" class="active">DevOps &amp; Cloud</a></li>
+                <li><a href="/watch-ai">AI Engineering</a></li>
+                <li><a href="/watch-security">App Security</a></li>
+                <li><a href="/watch-database">Databases</a></li>
+            
             </ul>
         </div>
         <span class="lesson-pos" id="lessonPos"></span>
@@ -1692,7 +1751,7 @@
     <main class="watch-main">
         <aside class="sidebar">
             <div class="side-head">
-                <span class="badge">MAIN COURSE</span>
+                <span class="badge">BACKEND TRACK</span>
                 <h1 id="courseName">Loading…</h1>
                 <div class="prog-bar">
                     <div class="prog-fill" id="progFill"></div>
@@ -1760,14 +1819,14 @@
             </div>
 
             <div class="tech-paths" id="techPaths">
-                <div class="tech-paths-label">Technical paths</div>
+                <div class="tech-paths-label">Technical category tracks</div>
                 <div class="tech-paths-row">
+                    <a href="/watch-devops">DevOps &amp; Cloud</a>
+                    <a href="/watch-ai">AI Engineering</a>
+                    <a href="/watch-security">App Security</a>
+                    <a href="/watch-database">Database Engineering</a>
                     <a href="/watch">Main Course</a>
                     <a href="/watch-backend">Backend Track</a>
-                    <a href="/#tracks">DevOps &amp; Cloud</a>
-                    <a href="/#tracks">AI Engineering</a>
-                    <a href="/#tracks">App Security</a>
-                    <a href="/#tracks">Databases</a>
                 </div>
             </div>
 
@@ -1792,11 +1851,7 @@
                     <h4>Courses</h4>
                     <ul>
                         <li><a href="/watch">Main Course</a></li>
-                        <li><a href="/watch-backend">Backend Track</a></li>
-                <li><a href="/watch-devops">DevOps &amp; Cloud</a></li>
-                <li><a href="/watch-ai">AI Engineering</a></li>
-                <li><a href="/watch-security">App Security</a></li>
-                <li><a href="/watch-database">Databases</a></li>
+                        <li><a href="/watch-backend">DevOps & Cloud</a></li>
                         <li><a href="/">Course Home</a></li>
                         <li><a href="/login">Sign In</a></li>
                     </ul>
@@ -1826,7 +1881,8 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Deecoder DevMastery Inc. All rights reserved. · <a href="/watch">Watch</a></p>
+            <p>&copy; 2026 Deecoder DevMastery Inc. All rights reserved. · <a href="/watch-backend">Backend lessons</a>
+            </p>
         </div>
     </footer>
 
@@ -1886,9 +1942,9 @@
             return h ? h + ':' + p(m) + ':' + p(sec) : m + ':' + p(sec);
         }
 
-        var PAGE_URL = '/watch';
-        var STORE_KEY = 'dm_progress';
-        var TITLE_SUFFIX = ' | DevMastery';
+        var PAGE_URL = '/watch-backend';
+        var STORE_KEY = 'dm_progress_backend';
+        var TITLE_SUFFIX = ' · Backend | DevMastery';
 
         /* ══════════════ YouTube IFrame API loader ══════════════ */
         var ytApiPromiseCache = null;
@@ -2078,6 +2134,7 @@
                 if (o && typeof o.lock === 'function') {
                     return o.lock('landscape').catch(function () { /* not allowed on this browser/device */ });
                 }
+                /* older Android Chrome */
                 if (typeof screen.lockOrientation === 'function') {
                     try { screen.lockOrientation('landscape'); } catch (e) { }
                 } else if (typeof screen.mozLockOrientation === 'function') {
@@ -2117,10 +2174,12 @@
                 var rq = el.requestFullscreen || el.webkitRequestFullscreen;
                 if (!rq) return;
                 var p = rq.call(el);
+                /* lock landscape after (or with) fullscreen — must follow a user gesture */
                 var afterFs = function () { return lockLandscape(); };
                 if (p && typeof p.then === 'function') {
                     p.then(afterFs).catch(function () { /* fullscreen denied */ });
                 } else {
+                    /* older webkit: no promise */
                     setTimeout(afterFs, 120);
                 }
             }
@@ -2276,7 +2335,6 @@
                 wakeControls();
             });
             track.addEventListener('pointermove', function (e) {
-                /* hover tooltip */
                 if (player.dur > 0) {
                     var f = frac(e);
                     $('vtip').style.left = (f * 100) + '%';
@@ -2314,7 +2372,7 @@
             /* click video = toggle play · double-click = fullscreen */
             var clickT = null;
             $('vclick').addEventListener('click', function () {
-                if (clickT) { clearTimeout(clickT); clickT = null; return; }  /* second click of a dblclick */
+                if (clickT) { clearTimeout(clickT); clickT = null; return; }
                 clickT = setTimeout(function () { clickT = null; togglePlay(); }, 220);
             });
             $('vclick').addEventListener('dblclick', function () {
@@ -2333,6 +2391,7 @@
                     var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
                     $('vbFs').innerHTML = fsEl ? I_FSX : I_FS;
                     if (fsEl) {
+                        /* ensure landscape while fullscreen (mobile Chrome / Android) */
                         lockLandscape();
                         wakeControls();
                     } else {
@@ -2404,7 +2463,7 @@
         });
 
         /* ---------- boot: guards first, then load ---------- */
-        if (typeof DM === 'undefined' || typeof DM.loadCourse !== 'function') {
+        if (typeof DM === 'undefined' || typeof DM.loadDevopsCourse !== 'function') {
             $('courseName').textContent = 'Script outdated';
             $('lessonList').innerHTML = '<div class="no-match" style="display:block">dm-api.js is missing or outdated (browser may have cached the old copy).<br>Replace dm-api.js, then hard-refresh: <b>Ctrl+Shift+R</b> / <b>Cmd+Shift+R</b>.</div>';
             $('playerStage').innerHTML = '<div class="perr">🧩 dm-api.js problem</div>';
@@ -2421,10 +2480,10 @@
                 location.replace('/login?next=' + encodeURIComponent(PAGE_URL));
             });
 
-            DM.loadCourse().then(function (c) {
+            DM.loadDevopsCourse().then(function (c) {
                 if (!c || !Array.isArray(c.modules)) throw new Error('bad shape');
                 course = c;
-                $('courseName').textContent = c.courseName || 'Course';
+                $('courseName').textContent = c.courseName || 'Backend Course';
                 c.modules.forEach(function (m) { (m.lessons || []).forEach(function (l) { flat.push({ mod: m.name, lesson: l }); }); });
                 cur = Math.max(0, Math.min(cur, Math.max(0, flat.length - 1)));
                 renderAll();
@@ -2435,7 +2494,7 @@
                 }
                 $('courseName').textContent = 'Server offline';
                 var msg = (err && err.status === 404)
-                    ? 'app.py is outdated (API returned 404).<br>Replace app.py with the new version and restart: <b>python app.py</b>.'
+                    ? 'app.py is outdated — it has no backend-course API (404).<br>Replace app.py with the new version and restart: <b>python app.py</b>.'
                     : 'Couldn’t reach the server.<br>Run <b>python app.py</b>, then refresh.';
                 $('lessonList').innerHTML = '<div class="no-match" style="display:block">' + msg + '</div>';
                 $('playerStage').innerHTML = '<div class="perr">📡 server problem — see message on the left</div>';

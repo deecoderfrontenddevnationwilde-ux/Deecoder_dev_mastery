@@ -1,0 +1,35 @@
+{
+  "courseName": "DevOps & Cloud",
+  "modules": [
+    {
+      "name": "Module 1 · Containers & Orchestration",
+      "lessons": [
+        {
+          "t": "Kubernetes fundamentals",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Docker for production workflows",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    },
+    {
+      "name": "Module 2 · Delivery & Cloud",
+      "lessons": [
+        {
+          "t": "CI/CD pipelines",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        },
+        {
+          "t": "Terraform & AWS foundations",
+          "d": "—",
+          "v": "klUqEDQFC9c"
+        }
+      ]
+    }
+  ]
+}

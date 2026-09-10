@@ -153,6 +153,84 @@ window.DM = {
       return r.json();
     });
   },
+  loadTechCourse: function () {
+    return fetch('/api/tech-course', { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+
+  loadDevopsCourse: function () {
+    return fetch('/api/devops-course', { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+  saveDevopsCourse: function (data) {
+    return fetch('/api/devops-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+
+  loadAiCourse: function () {
+    return fetch('/api/ai-course', { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+  saveAiCourse: function (data) {
+    return fetch('/api/ai-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+
+  loadSecurityCourse: function () {
+    return fetch('/api/security-course', { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+  saveSecurityCourse: function (data) {
+    return fetch('/api/security-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+
+  loadDatabaseCourse: function () {
+    return fetch('/api/database-course', { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+  saveDatabaseCourse: function (data) {
+    return fetch('/api/database-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
   listVideos: function () {
     return fetch('/api/videos', { credentials: 'same-origin' }).then(function (r) {
       if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
@@ -199,6 +277,17 @@ window.DM = {
   },
   saveBackendCourse: function (data) {
     return fetch('/api/backend-course', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(data)
+    }).then(function (r) {
+      if (!r.ok) { var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; }
+      return r.json();
+    });
+  },
+  saveTechCourse: function (data) {
+    return fetch('/api/tech-course', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',

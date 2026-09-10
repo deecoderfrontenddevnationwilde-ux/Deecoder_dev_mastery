@@ -1,16 +1,16 @@
 {
   "tokens": {
-    "email:deecoderfrontenddevnationwide@gmail.com": {
-      "username": "shadow",
+    "email:apexcodedigitaldynamics@gmail.com": {
+      "username": "apexcode",
       "channel": "email",
-      "dest": "deecoderfrontenddevnationwide@gmail.com",
-      "code_hash": "55213c4f0ce2b8dfb360e4e6f40ff8e5be498d32f04d2706205e2aeb7765893a",
-      "expires": 1788959995.795977,
-      "sent_at": 1788959095.795977,
-      "attempts": 0,
-      "used": false,
+      "dest": "apexcodedigitaldynamics@gmail.com",
+      "code_hash": "",
+      "expires": 1789080140.4562318,
+      "sent_at": 1789079240.4562318,
+      "attempts": 1,
+      "used": true,
       "reset_token": null,
-      "reset_token_expires": null
+      "reset_token_expires": 1789080167.7788243
     }
   }
 }

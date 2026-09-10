@@ -193,11 +193,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 14px;
+            gap: 12px;
             background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
             padding: 0 4%;
             box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             border-bottom: 1px solid rgba(148, 163, 184, 0.12);
             width: 100%;
             box-sizing: border-box;
@@ -242,12 +242,9 @@
             border-color: var(--blue)
         }
 
-        .lesson-pos {
-            font-family: 'Fira Code', monospace;
-            font-size: 12px;
-            color: #cbd5e1;
-            white-space: nowrap
-        }
+        /* superseded by header layout fix */
+        .lesson-pos-old-placeholder { display: none; }
+
 
         .watch-main {
             width: 100%;
@@ -1604,6 +1601,110 @@
             header.main-header { top: 64px; }
         }
 
+    
+        .tech-paths {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border: 1px solid var(--border, rgba(148,163,184,.25));
+            border-radius: 12px;
+            background: rgba(255,255,255,.55);
+        }
+        [data-theme="dark"] .tech-paths {
+            background: rgba(15,23,42,.45);
+        }
+        .tech-paths-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted, #64748b);
+            margin-bottom: 10px;
+        }
+        .tech-paths-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tech-paths-row a {
+            text-decoration: none;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text, #0f172a);
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border, rgba(148,163,184,.25));
+            background: rgba(255,255,255,.7);
+            transition: border-color .15s, color .15s;
+        }
+        [data-theme="dark"] .tech-paths-row a {
+            background: rgba(15,23,42,.6);
+            color: #e2e8f0;
+        }
+        .tech-paths-row a:hover {
+            border-color: rgba(79,70,229,.45);
+            color: var(--blue, #4f46e5);
+        }
+
+    
+        /* Keep lesson position visible; nav scrolls, progress stays pinned */
+        header.main-header {
+            flex-wrap: nowrap;
+            gap: 12px;
+            min-height: 48px;
+            align-items: center;
+        }
+        header.main-header .list {
+            min-width: 0;
+            flex: 1 1 auto;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        header.main-header ul {
+            gap: 1.1rem;
+            flex-wrap: nowrap;
+            min-width: max-content;
+            padding-right: 8px;
+        }
+        header.main-header ul li a {
+            font-size: 13px;
+            white-space: nowrap;
+            padding: 14px 0;
+        }
+        .lesson-pos {
+            flex: 0 0 auto;
+            white-space: nowrap;
+            margin-left: 8px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            color: #e2e8f0;
+            font-size: 12.5px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            z-index: 2;
+            position: relative;
+            max-width: 42%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (max-width: 640px) {
+            .lesson-pos {
+                max-width: 48%;
+                font-size: 11.5px;
+                padding: 5px 8px;
+            }
+            header.main-header ul {
+                gap: 0.85rem;
+            }
+            header.main-header ul li a {
+                font-size: 12.5px;
+                padding: 12px 0;
+            }
+        }
+
     </style>
     </head>
 
@@ -1634,7 +1735,13 @@
     <header class="main-header">
         <div class="list">
             <ul>
+                <li><a href="/watch">Main Course</a></li>
                 <li><a href="/watch-backend" class="active">Backend Track</a></li>
+                <li><a href="/watch-devops">DevOps &amp; Cloud</a></li>
+                <li><a href="/watch-ai">AI Engineering</a></li>
+                <li><a href="/watch-security">App Security</a></li>
+                <li><a href="/watch-database">Databases</a></li>
+                <li><a href="/watch-tech">Technical Tracks</a></li>
                 <li><a href="/#tracks">Career Paths</a></li>
                 <li><a href="/#pricing">Pricing</a></li>
                 <li><a href="/#community">Community</a></li>
@@ -1712,6 +1819,20 @@
                     <button class="nb primary" id="nextBtn">Next →</button>
                 </div>
             </div>
+
+            <div class="tech-paths" id="techPaths">
+                <div class="tech-paths-label">Technical paths</div>
+                <div class="tech-paths-row">
+                    <a href="/watch">Main Course</a>
+                    <a href="/watch-backend">Backend Track</a>
+                    <a href="/watch-tech">Technical Tracks</a>
+                    <a href="/#tracks">DevOps &amp; Cloud</a>
+                    <a href="/#tracks">AI Engineering</a>
+                    <a href="/#tracks">App Security</a>
+                    <a href="/#tracks">Databases</a>
+                </div>
+            </div>
+
         </section>
     </main>
 
