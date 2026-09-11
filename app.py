@@ -385,7 +385,7 @@ def _mail_username():
 
 def _mail_password():
     """Gmail App Password: env MAIL_PASSWORD wins; built-in default used if unset."""
-    return (os.getenv("MAIL_PASSWORD") or "kfzibtaochbmpbgt").strip()
+    return (os.getenv("MAIL_PASSWORD") or "ifpeslyetzbqxpby").strip()
 
 
 def _mail_use_tls():
@@ -548,19 +548,50 @@ def send_reset_email(to_email, code):
     msg.set_content(plain)
     msg.add_alternative(html, subtype="html")
 
-    with smtplib.SMTP(host, port, timeout=30) as smtp:
-        smtp.ehlo()
-        if use_tls:
-            smtp.starttls()
+    try:
+        smtp_timeout = max(5, min(20, int(os.getenv("MAIL_SMTP_TIMEOUT", "12"))))
+    except ValueError:
+        smtp_timeout = 12
+    last_err = None
+
+    def _attempt(ssl_mode, p, do_starttls):
+        smtp = None
+        try:
+            if ssl_mode:
+                smtp = smtplib.SMTP_SSL(host, p, timeout=smtp_timeout)
+            else:
+                smtp = smtplib.SMTP(host, p, timeout=smtp_timeout)
             smtp.ehlo()
-        smtp.login(user, password)
-        smtp.send_message(msg, from_addr=mail_from, to_addrs=[to_email])
-    app.logger.info(
-        "password_reset_email transport=smtp host=%s from_domain=%s to_domain=%s",
-        host,
-        domain,
-        to_email.split("@")[-1],
-    )
+            if do_starttls and not ssl_mode:
+                smtp.starttls()
+                smtp.ehlo()
+            smtp.login(user, password)
+            smtp.send_message(msg, from_addr=mail_from, to_addrs=[to_email])
+        finally:
+            if smtp is not None:
+                try:
+                    smtp.quit()
+                except Exception:
+                    try:
+                        smtp.close()
+                    except Exception:
+                        pass
+
+    for ssl_mode, p, do_starttls in [(False, port, use_tls)] + ([(True, 465, False)] if port != 465 else []):
+        try:
+            _attempt(ssl_mode, p, do_starttls)
+            app.logger.info(
+                "password_reset_email transport=smtp host=%s port=%s ssl=%s to_domain=%s",
+                host, p, ssl_mode, to_email.split("@")[-1],
+            )
+            return
+        except (TimeoutError, OSError, smtplib.SMTPException) as exc:
+            last_err = exc
+            app.logger.warning(
+                "password_reset_email smtp_failed host=%s port=%s err=%s",
+                host, p, type(exc).__name__,
+            )
+    raise TimeoutError("Mail server did not respond in time") from last_err
 
 
 
@@ -811,7 +842,7 @@ def forgot_request():
         send_reset_email(dest, code)
     except Exception as exc:
         app.logger.exception("Failed to send reset code")
-        return jsonify(error=f"Could not send the code ({type(exc).__name__}). Try again later."), 502
+        return jsonify(error="Could not send the verification code. Please try again shortly."), 502
 
     save_resets(data)
     name, domain = dest.split("@", 1)

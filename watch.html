@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Watch | DevMastery</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1648,7 +1648,334 @@
             color: var(--blue, #4f46e5);
         }
 
-    </style>
+    
+
+        /* Mobile top bar: keep one row so hamburger stays usable */
+        @media (max-width: 900px) {
+            nav.navbar {
+                flex-wrap: nowrap;
+                padding: 10px 3.5%;
+                gap: 8px;
+                min-height: 56px;
+            }
+            nav.navbar .logo {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+            nav.navbar .logo h2 {
+                font-size: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .nav-actions {
+                width: auto !important;
+                flex: 0 0 auto;
+                flex-wrap: nowrap !important;
+                gap: 6px !important;
+                justify-content: flex-end !important;
+            }
+            /* Hide secondary chrome on the tightest bars; keep theme + hamburger + primary CTA */
+            nav.navbar .btn-secondary,
+            nav.navbar .who {
+                display: none !important;
+            }
+            nav.navbar .btn-primary {
+                padding: 9px 12px;
+                font-size: 12.5px;
+                white-space: nowrap;
+            }
+            .mobile-nav,
+            .mobile-nav-backdrop {
+                top: 56px;
+            }
+            body {
+                padding-top: 56px !important;
+            }
+            body.nav-open .mobile-nav {
+                max-height: calc(100dvh - 56px);
+            }
+        }
+
+        @media (max-width: 400px) {
+            nav.navbar .btn-primary {
+                display: none; /* ultra-narrow: menu holds Start Learning paths */
+            }
+        }
+
+
+        /* Account section — always reachable at top of mobile menu */
+        .mobile-nav {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+        .mobile-nav.open {
+            display: flex;
+        }
+        .mobile-nav-auth {
+            flex: 0 0 auto;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            padding: 16px 5% 14px;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border, rgba(148,163,184,.22));
+            background: var(--card, #ffffff);
+        }
+        .mobile-nav > ul {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0;
+            padding: 4px 0 12px;
+        }
+        .mobile-nav-user {
+            display: none !important;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .mobile-nav-user.is-visible {
+            display: flex !important;
+        }
+        .mobile-nav-guest {
+            display: none !important;
+        }
+        .mobile-nav-guest.is-visible {
+            display: block !important;
+        }
+        .mobile-nav-username {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text, #0f172a);
+            word-break: break-word;
+            line-height: 1.35;
+        }
+        .mobile-nav-username .label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--muted, #64748b);
+            margin-bottom: 6px;
+        }
+        .mobile-nav-signout {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .mobile-nav-guest a {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 48px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border, rgba(148,163,184,.28));
+            background: var(--primary-soft, #eef2ff);
+            color: var(--primary, #4f46e5);
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        [data-theme="dark"] .mobile-nav-auth {
+            background: #0f172a;
+            border-bottom-color: rgba(148, 163, 184, 0.16);
+        }
+        [data-theme="dark"] .mobile-nav-username {
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .mobile-nav-username .label {
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .mobile-nav-signout {
+            background: rgba(239, 68, 68, 0.16);
+            border-color: rgba(248, 113, 113, 0.45);
+            color: #fecaca;
+        }
+        [data-theme="dark"] .mobile-nav-guest a {
+            background: rgba(99, 102, 241, 0.18);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #c7d2fe;
+        }
+
+        /* ── Hamburger + mobile nav (theme-aware) ── */
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 42px;
+            height: 42px;
+            padding: 0;
+            border-radius: 10px;
+            border: 1px solid var(--border, rgba(148,163,184,.28));
+            background: var(--card-muted, #f8fafc);
+            color: var(--text, #0f172a);
+            cursor: pointer;
+            flex: none;
+            transition: background .2s ease, border-color .2s ease, color .2s ease;
+        }
+        .nav-hamburger:hover {
+            border-color: rgba(79, 70, 229, 0.35);
+            color: var(--primary, #4f46e5);
+            background: var(--primary-soft, #eef2ff);
+        }
+        .nav-hamburger:focus-visible {
+            outline: 2px solid var(--primary, #4f46e5);
+            outline-offset: 2px;
+        }
+        .nav-hamburger span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            border-radius: 2px;
+            background: currentColor;
+            transition: transform .22s ease, opacity .18s ease;
+        }
+        .nav-hamburger[aria-expanded="true"] span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .nav-hamburger[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav-hamburger[aria-expanded="true"] span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        [data-theme="dark"] .nav-hamburger {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(148, 163, 184, 0.22);
+            color: #e2e8f0;
+        }
+        [data-theme="dark"] .nav-hamburger:hover {
+            background: rgba(99, 102, 241, 0.14);
+            color: #a5b4fc;
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            z-index: 97;
+            max-height: min(70vh, calc(100dvh - 64px));
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: var(--card, #fff);
+            border-bottom: 1px solid var(--border, rgba(148,163,184,.28));
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+            padding: 8px 0 12px;
+            transform: translateY(-8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease;
+        }
+        .mobile-nav.open {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .mobile-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .mobile-nav ul li a {
+            display: block;
+            padding: 14px 5%;
+            color: var(--text, #0f172a);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            border-bottom: 1px solid var(--border, rgba(148,163,184,.18));
+            transition: background .15s ease, color .15s ease;
+        }
+        .mobile-nav ul li a:hover,
+        .mobile-nav ul li a:focus-visible {
+            background: var(--primary-soft, #eef2ff);
+            color: var(--primary, #4f46e5);
+            outline: none;
+        }
+        .mobile-nav ul li a.active {
+            color: var(--primary, #4f46e5);
+            background: var(--primary-soft, #eef2ff);
+        }
+        [data-theme="dark"] .mobile-nav {
+            background: #0f172a;
+            border-bottom-color: rgba(148, 163, 184, 0.16);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        }
+        [data-theme="dark"] .mobile-nav ul li a {
+            color: #e2e8f0;
+            border-bottom-color: rgba(148, 163, 184, 0.12);
+        }
+        [data-theme="dark"] .mobile-nav ul li a:hover,
+        [data-theme="dark"] .mobile-nav ul li a:focus-visible,
+        [data-theme="dark"] .mobile-nav ul li a.active {
+            background: rgba(99, 102, 241, 0.16);
+            color: #a5b4fc;
+        }
+        .mobile-nav-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            top: 64px;
+            z-index: 96;
+            background: rgba(15, 23, 42, 0.35);
+        }
+        .mobile-nav-backdrop.open {
+            display: block;
+        }
+        [data-theme="dark"] .mobile-nav-backdrop {
+            background: rgba(0, 0, 0, 0.55);
+        }
+        body.nav-open {
+            overflow: hidden;
+        }
+
+        @media (max-width: 900px) {
+            .nav-hamburger {
+                display: inline-flex;
+            }
+            header.main-header {
+                display: none !important;
+            }
+            body {
+                padding-top: 72px !important;
+            }
+        }
+
+        @media (min-width: 901px) {
+            .mobile-nav,
+            .mobile-nav-backdrop,
+            .nav-hamburger {
+                display: none !important;
+            }
+        }
+
+</style>
     </head>
 
 <body>
@@ -1666,6 +1993,10 @@
                 <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                 <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
             </button>
+            <button type="button" class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+                <span></span><span></span><span></span>
+            </button>
+
 
             <a href="/login" class="btn-secondary" id="signInLink">Sign In / Create Account</a>
             <span class="who" id="who"></span>
@@ -1688,6 +2019,30 @@
         </div>
         <span class="lesson-pos" id="lessonPos"></span>
     </header>
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+                <div class="mobile-nav-auth" id="mobileNavAuth">
+            <div class="mobile-nav-user" id="mobileNavUser">
+                <div class="mobile-nav-username" id="mobileNavUsername">
+                    <span class="label">Signed in as</span>
+                    <span id="mobileNavUsernameText"></span>
+                </div>
+                <button type="button" class="mobile-nav-signout" id="mobileNavSignOut">Sign Out</button>
+            </div>
+            <div class="mobile-nav-guest is-visible" id="mobileNavGuest">
+                <a href="/login" id="mobileNavSignIn">Sign In / Create Account</a>
+            </div>
+        </div>
+<ul>
+            <li><a href="/watch" class="active">Main Course</a></li>
+            <li><a href="/watch-backend">Backend Track</a></li>
+            <li><a href="/watch-tech">Technical Tracks</a></li>
+            <li><a href="/#tracks">Career Paths</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/#community">Community</a></li>
+        </ul>
+    </nav>
+
 
     <main class="watch-main">
         <aside class="sidebar">
@@ -2414,6 +2769,7 @@
                     $('who').textContent = '👤 ' + me.username;
                     $('signInLink').style.display = 'none';
                     $('signOutLink').style.display = '';
+                    if (window.__dmMobileAuth) window.__dmMobileAuth.showUser(me.username);
                 } else {
                     location.replace('/login?next=' + encodeURIComponent(PAGE_URL));
                 }
@@ -2442,6 +2798,112 @@
             });
         }
     </script>
+<script>
+
+        /* ── Mobile hamburger menu ── */
+        (function () {
+            var btn = document.getElementById('navHamburger');
+            var panel = document.getElementById('mobileNav');
+            var backdrop = document.getElementById('mobileNavBackdrop');
+            if (!btn || !panel) return;
+
+            function syncTop() {
+                var nav = document.querySelector('nav.navbar');
+                var h = nav ? Math.ceil(nav.getBoundingClientRect().height) : 56;
+                panel.style.top = h + 'px';
+                if (backdrop) backdrop.style.top = h + 'px';
+                panel.style.maxHeight = 'calc(100dvh - ' + h + 'px)';
+            }
+
+            function setOpen(open) {
+                syncTop();
+                panel.classList.toggle('open', open);
+                if (backdrop) backdrop.classList.toggle('open', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                document.body.classList.toggle('nav-open', open);
+            }
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                setOpen(!panel.classList.contains('open'));
+            });
+            if (backdrop) {
+                backdrop.addEventListener('click', function () { setOpen(false); });
+            }
+            panel.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () { setOpen(false); });
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') setOpen(false);
+            });
+            window.addEventListener('resize', function () {
+                syncTop();
+                if (window.innerWidth > 900) setOpen(false);
+            });
+            syncTop();
+        })();
+
+        /* ── Mobile nav auth (uses existing DM.me / DM.logout) ── */
+        (function () {
+            var userBox = document.getElementById('mobileNavUser');
+            var guestBox = document.getElementById('mobileNavGuest');
+            var nameEl = document.getElementById('mobileNavUsernameText');
+            var outBtn = document.getElementById('mobileNavSignOut');
+            if (!userBox || !guestBox) return;
+
+            function showGuest() {
+                userBox.classList.remove('is-visible');
+                guestBox.classList.add('is-visible');
+            }
+
+            function showUser(username) {
+                if (nameEl) nameEl.textContent = String(username || 'User');
+                guestBox.classList.remove('is-visible');
+                userBox.classList.add('is-visible');
+            }
+
+            // Expose for desktop auth handlers if needed
+            window.__dmMobileAuth = { showUser: showUser, showGuest: showGuest };
+
+            if (outBtn) {
+                outBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var go = function () { window.location.href = '/login'; };
+                    if (typeof DM !== 'undefined' && typeof DM.logout === 'function') {
+                        DM.logout().then(go, go);
+                    } else {
+                        go();
+                    }
+                });
+            }
+
+            function applyFromMe(me) {
+                if (me && me.authed && me.username) {
+                    showUser(me.username);
+                } else {
+                    showGuest();
+                }
+            }
+
+            // Default: guest until we know better
+            showGuest();
+
+            if (typeof DM === 'undefined' || typeof DM.me !== 'function') {
+                return;
+            }
+
+            try {
+                DM.me().then(applyFromMe).catch(function () { showGuest(); });
+            } catch (err) {
+                showGuest();
+            }
+        })();
+
+
+
+</script>
 </body>
 
 </html>

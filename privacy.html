@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Privacy Policy | DevMastery</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -278,7 +278,19 @@
                 font-size: 14.5px;
             }
         }
-    </style>
+    
+        /* Theme surface consistency */
+        body {
+            background: var(--bg, #f4f7fb);
+            color: var(--text, #0f172a);
+            transition: background-color .25s ease, color .25s ease;
+        }
+        [data-theme="dark"] body {
+            background: var(--bg, #0b1220);
+            color: var(--text, #e2e8f0);
+        }
+
+</style>
 </head>
 
 <body class="legal-page">

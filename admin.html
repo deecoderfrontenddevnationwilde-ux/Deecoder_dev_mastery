@@ -4,8 +4,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Admin Panel | DevMastery</title>
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('dm_theme');
+                if (t !== 'light' && t !== 'dark') {
+                    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                }
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -1026,7 +1040,80 @@
             }
         }
         
-    </style>
+    
+        /* Theme surface consistency */
+        body {
+            background: var(--bg, #f4f7fb);
+            color: var(--text, #0f172a);
+            transition: background-color .25s ease, color .25s ease;
+        }
+        [data-theme="dark"] body {
+            background: var(--bg, #0b1220);
+            color: var(--text, #e2e8f0);
+        }
+
+
+        [data-theme="dark"] {
+            --ink: #e2e8f0;
+            --slate: #cbd5e1;
+            --text: #94a3b8;
+            --muted: #94a3b8;
+            --faint: #64748b;
+            --border: rgba(148, 163, 184, 0.16);
+            --bg: #0b1220;
+            --surface: rgba(15, 23, 42, 0.92);
+            --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            color-scheme: dark;
+        }
+        [data-theme="dark"] body {
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.14), transparent 28%),
+                linear-gradient(180deg, #020617 0%, #0b1220 100%);
+            color: var(--ink);
+        }
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .side .card,
+        [data-theme="dark"] main,
+        [data-theme="dark"] .modal {
+            background: var(--surface);
+            border-color: var(--border);
+            color: var(--ink);
+        }
+        [data-theme="dark"] input,
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] select {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-color: rgba(148,163,184,0.28);
+        }
+        [data-theme="dark"] .topbar {
+            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+        }
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3 {
+            color: #f1f5f9;
+        }
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid rgba(148,163,184,0.28);
+            background: rgba(255,255,255,0.08);
+            color: #e2e8f0;
+            cursor: pointer;
+            padding: 0;
+        }
+        .theme-toggle svg { width: 17px; height: 17px; display: block; }
+        .theme-toggle .icon-sun { display: none; }
+        .theme-toggle .icon-moon { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+</style>
     </head>
 
 <body>
@@ -1040,7 +1127,11 @@
             <button class="tb-btn" id="exportBtn">⬇ Export JSON</button>
             <button class="tb-btn" id="importBtn">⬆ Import JSON</button>
             <button class="tb-btn" id="resetBtn">🗑 Reset</button>
-            <button class="tb-btn danger" id="logoutBtn">⎋ Logout</button>
+                        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Toggle theme">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+<button class="tb-btn danger" id="logoutBtn">⎋ Logout</button>
         </div>
     </div>
 
@@ -1773,6 +1864,28 @@
             });
         }
     </script>
+
+<script>
+(function () {
+    var btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    function currentTheme() {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    }
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try { localStorage.setItem('dm_theme', theme); } catch (e) {}
+        var isDark = theme === 'dark';
+        btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        btn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+    applyTheme(currentTheme());
+    btn.addEventListener('click', function () {
+        applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+    });
+})();
+</script>
+
 </body>
 
 </html>
